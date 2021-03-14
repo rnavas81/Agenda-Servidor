@@ -4,7 +4,7 @@ FROM php:apache-buster
 #Fichero para solucionar los problemas de rutas en Laravel
 COPY ./000-default.conf /etc/apache2/sites-available/
 
-    # Actualiza el sistema
+# Actualiza el sistema
 RUN apt-get --yes update && apt-get --yes upgrade && apt --yes autoremove && apt-get --yes clean\
     # Instala Composer
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer &&\

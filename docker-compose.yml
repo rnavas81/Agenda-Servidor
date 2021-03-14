@@ -1,7 +1,6 @@
 # Fichero de configuración para los contenedores del servidor de la aplicación Agenda
 version: "3.7"
 services:
-
   # Contenedor para la persistencia de datos
   agenda-db:
     # La imagen del contenedor está preparada en dockerhub
@@ -13,37 +12,35 @@ services:
       - 3306:3306
     #La ruta del volumen debe apuntar a la carpeta que contiene los datos de la base de datos
     volumes:
-      - database-agenda:/var/lib/mysql
-    #Variables de entorno  para el contenedor
-    env_file:
-      - .env.example
+      - agenda-database:/var/lib/mysql
+    # TODO: Descomentar para cargar las variables de entorno del fichero .env
+    # #Variables de entorno  para el contenedor
+    environment:
+      - MYSQL_ROOT_PASSWORD=Rivilla1940
+      - MYSQL_USER=rivilla
+      - MYSQL_PASSWORD=Rivilla1940
+    # env_file:
+    #   - .env.develop
     networks:
-      - agenda-server
-    depends_on:
-        - agenda-serverproxy
+      - agenda
 
- # Contenedor para el servidor laravel
+  # Contenedor para el servidor laravel
   agenda-server:
     # La imagen del contenedor se construye sobre una adecuando las necesidades
     build: .
     # Nombre asignado al contenedor
     container_name: agenda-server
-    # Variable de entorno para el contendor
-    environment:
-      # Esta ruta debe estar incluida en el fichero hosts del anfitrión
-      VIRTUAL_HOST: agenda.server.local
     depends_on:
-        - agenda-db
-        - agenda-serverproxy
+      - agenda-db
     networks:
-        - agenda-server
+      - agenda
     # Se mapea la carpeta con una local
     volumes:
-        - .:/var/www/html/
+      - .:/var/www/html/
     # restart: always
 
 networks:
-    agenda-server:
-        driver: bridge
+  agenda:
+    driver: bridge
 volumes:
-    database-agenda:
+  agenda-database:
