@@ -14,4 +14,9 @@ class Cliente extends Model
         'nombre',
         'telefono',
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'habilitado',
+    ];
 }

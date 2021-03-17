@@ -29,8 +29,8 @@ class CreateAgendaEntradasTable extends Migration
             $table->id();
             $table->timestamps();
             $table->tinyInteger('habilitado')->default(1);
-            $table->tinyInteger('aprobado')->default(0);
-            $table->integer('usuario');
+            $table->tinyInteger('confirmada')->default(0);
+            $table->integer('idUsuario');
             $table->date('salidaFecha')->nullable();
             $table->time('salidaHora')->nullable();
             $table->string('salidaLugar',500)->nullable();
@@ -38,7 +38,7 @@ class CreateAgendaEntradasTable extends Migration
             $table->time('llegadaHora')->nullable();
             $table->string('llegadaLugar',500)->nullable();
             $table->string('itinerario',1000)->nullable();
-            $table->integer('cliente')->nullable()->unsigned();
+            $table->integer('idCliente')->nullable()->unsigned();
             $table->string('clienteDetalle',500)->nullable();
             $table->float('presupuesto',12,3)->nullable();
         });

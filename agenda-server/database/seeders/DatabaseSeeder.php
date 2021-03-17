@@ -51,7 +51,7 @@ class DatabaseSeeder extends Seeder
                 'nombre'=>$fak->firstName." ".$fak->lastName,
             ]);
         }
-        // Crea entradas para agenda aprobadas y libro
+        // Crea entradas para agenda confirmadas y libro
         for ($i=1; $i <= 5; $i++) {
 
             $usuario = rand(1,2);
@@ -62,16 +62,16 @@ class DatabaseSeeder extends Seeder
             $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
             // Entradas de la agenda
             $entrada = \App\Models\AgendaEntrada::create([
-                'usuario'=>$usuario,
+                'idUsuario'=>$usuario,
                 'salidaFecha'=>$salida->format('Y-m-d'),
                 'salidaHora'=>$salida->format('H:i:s'),
                 'salidaLugar'=>$sitio,
                 'llegadaFecha'=>$llegada->format('Y-m-d'),
                 'llegadaHora'=>$llegada->format('H:i:s'),
                 'llegadaLugar'=>$sitio,
-                'cliente'=>$cliente,
+                'idCliente'=>$cliente,
                 'clienteDetalle'=>$clienteDetalle,
-                'aprobado'=>1
+                'confirmada'=>1
             ]);
             \App\Models\AgendaCoches::create([
                 'idAgenda'=>$entrada->id,
@@ -112,14 +112,14 @@ class DatabaseSeeder extends Seeder
             $llegada = $fak->dateTimeBetween($startDate = '-19 days', $endDate = '-15 days', $timezone = null);
             $sitio = $fak->city;
             $entrada = \App\Models\AgendaEntrada::create([
-                'usuario'=>$usuario,
+                'idUsuario'=>$usuario,
                 'salidaFecha'=>$salida->format('Y-m-d'),
                 'salidaHora'=>$salida->format('H:i:s'),
                 'salidaLugar'=>$sitio,
                 'llegadaFecha'=>$llegada->format('Y-m-d'),
                 'llegadaHora'=>$llegada->format('H:i:s'),
                 'llegadaLugar'=>$sitio,
-                'cliente'=>$cliente,
+                'idCliente'=>$cliente,
                 'clienteDetalle'=>$fak->sentence($nbWords = 6, $variableNbWords = true),
 
             ]);

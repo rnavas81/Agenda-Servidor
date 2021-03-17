@@ -13,4 +13,9 @@ class Coche extends Model
         'habilitado',
         'matricula',
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'habilitado',
+    ];
 }

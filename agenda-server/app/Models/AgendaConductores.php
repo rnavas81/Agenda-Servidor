@@ -17,11 +17,16 @@ class AgendaConductores extends Model
         'idAgenda',
         'idConductor'
     ];
-    public function agenda() {
-        $this->hasOne('App\Models\Agenda-Entrada','idAgenda','id');
+    protected $hidden = [
+        'idAgenda',
+        'idConductor'
+    ];
+    public function agenda()
+    {
+        return $this->hasOne(AgendaEntrada::class, 'idAgenda', 'id');
     }
-    public function conductor() {
-        $this->hasOne('App\Models\Conductor','idConductor','id');
+    public function conductor()
+    {
+        return $this->belongsTo(Conductor::class, 'idConductor', 'id');
     }
 }
-

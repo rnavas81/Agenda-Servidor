@@ -14,4 +14,9 @@ class Conductor extends Model
         'habilitado',
         'nombre',
     ];
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+        'habilitado',
+    ];
 }

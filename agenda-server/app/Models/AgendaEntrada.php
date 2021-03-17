@@ -11,7 +11,6 @@ class AgendaEntrada extends Model
     use HasFactory, Notifiable;
     protected $table = 'agenda';
     protected $fillable = [
-        'usuario',
         'salidaFecha',
         'salidaHora',
         'salidaLugar',
@@ -19,27 +18,34 @@ class AgendaEntrada extends Model
         'llegadaHora',
         'llegadaLugar',
         'itinerario',
-        'cliente',
         'clienteDetalle',
         'presupuesto',
+        'idCliente',
+        'idUsuario',
     ];
     protected $hidden = [
+        'idCliente',
+        'idUsuario',
         'created_at',
         'updated_at',
         'habilitado',
-        'aprobado'
+        'confirmada'
     ];
 
-    public function usuario() {
-        return $this->hasOne('App\Models\User','usuario','id');
+    public function usuario()
+    {
+        return $this->hasOne(User::class, 'id', 'idUsuario');
     }
-    public function cliente() {
-        return $this->hasOne('App\Models\Cliente','cliente','id');
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class, 'id', 'idCliente');
     }
-    public function coches() {
-        return $this->hasMany('App\Models\Agenda-Coches','id','idCoche');
+    public function coches()
+    {
+        return $this->hasMany(AgendaCoches::class, 'idAgenda', 'id');
     }
-    public function conductores() {
-        return $this->hasMany('App\Models\Agenda-Coches','id','idConductor');
+    public function conductores()
+    {
+        return $this->hasMany(AgendaConductores::class, 'idAgenda', 'id');
     }
 }

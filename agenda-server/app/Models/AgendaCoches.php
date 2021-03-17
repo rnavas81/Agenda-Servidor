@@ -19,10 +19,16 @@ class AgendaCoches extends Model
         'idAgenda',
         'idCoche'
     ];
-    public function agenda() {
-        $this->hasOne('App\Models\Agenda-Entrada','idAgenda','id');
+    protected $hidden = [
+        'idAgenda',
+        'idCoche'
+    ];
+    public function agenda()
+    {
+        return $this->hasOne(AgendaEntrada::class, 'idAgenda', 'id');
     }
-    public function coche() {
-        $this->hasOne('App\Models\Agenda-Entrada','idCoche','id');
+    public function coche()
+    {
+        return $this->belongsTo(Coche::class, 'idCoche', 'id');
     }
 }

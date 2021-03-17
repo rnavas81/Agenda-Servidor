@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Agenda;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -23,7 +24,6 @@ Route::get('/test', function (Request $request) {
         // Test database connection
         DB::connection()->getPdo();
         return response()->noContent(200);
-
     } catch (\Exception $e) {
         return response()->noContent(400);
     }
@@ -36,63 +36,44 @@ Route::middleware('auth:api')->get('/login', function (Request $request) {
 //     return $request->user();
 // });
 /******* USUARIOS *******/
-Route::get('/usuarios', function (Request $request) {
-});
-Route::get('/usuario', function (Request $request) {
-});
+Route::get('/usuarios', [App\Http\Controllers\Usuarios::class, 'edit']);
+Route::get('/usuario', [App\Http\Controllers\Usuarios::class, 'edit']);
 /******* CONDUCTORES *******/
-Route::get('/conductores', function (Request $request) {
-});
-Route::get('/conductor', function (Request $request) {
-});
+Route::get('/conductores', [App\Http\Controllers\Usuarios::class, 'edit']);
+Route::get('/conductor', [App\Http\Controllers\Usuarios::class, 'edit']);
 /******* COCHES *******/
-Route::get('/coches', function (Request $request) {
-});
-Route::get('/coche', function (Request $request) {
-});
+Route::get('/coches', [App\Http\Controllers\Usuarios::class, 'edit']);
+Route::get('/coche', [App\Http\Controllers\Usuarios::class, 'edit']);
 /******* CLIENTES *******/
 // Recupera los clientes
-Route::get('/clientes', function (Request $request) {
-});
-Route::get('/cliente', function (Request $request) {
-});
+Route::get('/clientes', [App\Http\Controllers\Usuarios::class, 'edit']);
+Route::get('/cliente', [App\Http\Controllers\Usuarios::class, 'edit']);
+
 /******* AGENDA *******/
 // Recupera los datos de la agenda
-Route::get('/agenda', function (Request $request) {
-});
+Route::get('/agenda', [Agenda::class, 'getAll']);
 // Recupera los datos de una entrada de la agenda
-Route::get('/agenda/{id}', function (Request $request) {
-});
+Route::get('/agenda/{id}', [Agenda::class, 'get']);
 // Busca las entradas de la agenda en una fecha
-Route::get('/agenda/entradas/{fecha}', function (Request $request) {
-});
+Route::get('/agenda/entradas/{fecha}', [Agenda::class, 'getByFecha']);
 // Nueva entrada de agenda
-Route::post('/agenda', function (Request $request) {
-});
+Route::post('/agenda', [Agenda::class, 'insert']);
 // Actualiza una entrada de agenda
-Route::put('/agenda/{id}', function (Request $request) {
-});
-// Confirma una entrada de agenda
-Route::put('/agenda/confirmar/{id}', function (Request $request) {
-});
+Route::put('/agenda/{id}', [Agenda::class, 'update']);
 // Elimina una entrada de agenda
-Route::delete('/agenda/{id}', function (Request $request) {
-});
+Route::delete('/agenda/{id}', [Agenda::class, 'delete']);
+// Confirma una entrada de agenda
+Route::put('/agenda/confirmar/{id}', [Agenda::class, 'confirm']);
+
 /******* LIBRO *******/
-Route::get('/libro', function (Request $request) {
-});
+Route::get('/libro', [App\Http\Controllers\Libro::class, 'edit']);
 // Recupera los datos de una entrada de la libro
-Route::get('/libro/{id}', function (Request $request) {
-});
+Route::get('/libro/{id}', [App\Http\Controllers\Libro::class, 'edit']);
 // Busca las entradas de la libro en una fecha
-Route::get('/libro/entradas/{fecha}', function (Request $request) {
-});
+Route::get('/libro/entradas/{fecha}', [App\Http\Controllers\Libro::class, 'edit']);
 // Nueva entrada de libro
-Route::post('/libro', function (Request $request) {
-});
+Route::post('/libro', [App\Http\Controllers\Libro::class, 'edit']);
 // Actualiza una entrada de libro
-Route::put('/libro/{id}', function (Request $request) {
-});
+Route::put('/libro/{id}', [App\Http\Controllers\Libro::class, 'edit']);
 // Elimina una entrada de libro
-Route::delete('/libro/{id}', function (Request $request) {
-});
+Route::delete('/libro/{id}', [App\Http\Controllers\Libro::class, 'edit']);
