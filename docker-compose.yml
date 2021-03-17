@@ -1,5 +1,5 @@
 # Fichero de configuración para los contenedores del servidor de la aplicación Agenda
-version: "3.7"
+version: "3.8"
 services:
   # Contenedor para la persistencia de datos
   agenda-db:
@@ -21,6 +21,8 @@ services:
       - MYSQL_PASSWORD=Rivilla1940
     # env_file:
     #   - .env.develop
+    # TODO:descomentar para producción
+    # restart: always
     networks:
       - agenda
 
@@ -32,11 +34,14 @@ services:
     container_name: agenda-server
     depends_on:
       - agenda-db
+    ports:
+      - 81:80
     networks:
       - agenda
     # Se mapea la carpeta con una local
     volumes:
-      - .:/var/www/html/
+      - ./agenda-server:/var/www/html/
+    # TODO:descomentar para producción
     # restart: always
 
 networks:

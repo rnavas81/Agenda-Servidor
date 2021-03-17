@@ -4,7 +4,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 CREATE DATABASE IF NOT EXISTS AutobusesRivilla
     CHARACTER SET utf8
     COLLATE utf8_spanish_ci;
-
+/*
 USE AutobusesRivilla;
 -- ----------------------------
 -- Table structure for Coches
@@ -188,3 +188,4 @@ CREATE TABLE `LibroConductores`  (
 
 
 SET FOREIGN_KEY_CHECKS = 1;
+*/
