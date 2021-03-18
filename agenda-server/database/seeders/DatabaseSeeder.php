@@ -84,14 +84,14 @@ class DatabaseSeeder extends Seeder
             // Entradas del libro
             $entrada = \App\Models\LibroEntrada::create([
                 'idAgenda'=>$entrada->id,
-                'usuario'=>$usuario,
+                'idUsuario'=>$usuario,
                 'salidaFecha'=>$salida->format('Y-m-d'),
                 'salidaHora'=>$salida->format('H:i:s'),
                 'salidaLugar'=>$sitio,
                 'llegadaFecha'=>$llegada->format('Y-m-d'),
                 'llegadaHora'=>$llegada->format('H:i:s'),
                 'llegadaLugar'=>$sitio,
-                'cliente'=>$cliente,
+                'idCliente'=>$cliente,
                 'clienteDetalle'=>$clienteDetalle,
             ]);
             \App\Models\LibroCoches::create([

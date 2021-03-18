@@ -11,6 +11,8 @@ class LibroEntrada extends Model
     use HasFactory, Notifiable;
     protected $table = 'libro';
     protected $fillable = [
+        'idCliente',
+        'idUsuario',
         'idAgenda',
         'salidaFecha',
         'salidaHora',
@@ -20,7 +22,7 @@ class LibroEntrada extends Model
         'llegadaLugar',
         'itinerario',
         'kms',
-        'cliente',
+        'idCliente',
         'clienteDetalle',
         'facturarA',
         'contacto',
@@ -35,23 +37,29 @@ class LibroEntrada extends Model
         'facturaNumero',
     ];
     protected $hidden = [
+        'idCliente',
+        'idUsuario',
         'created_at',
         'updated_at',
         'habilitado'
     ];
-    public function usuario() {
-        return $this->hasOne('App\Models\User','usuario','id');
+    public function agenda(){
+        return $this->hasOne(AgendaEntrada::class,'id','idAgenda');
     }
-    public function cliente() {
-        return $this->hasOne('App\Models\Cliente','cliente','id');
+    public function usuario()
+    {
+        return $this->hasOne(User::class, 'id', 'idUsuario');
     }
-    public function facturarA() {
-        return $this->hasOne('App\Models\Cliente','facturarA','id');
+    public function cliente()
+    {
+        return $this->hasOne(Cliente::class, 'id', 'idCliente');
     }
-    public function coches() {
-        return $this->hasMany('App\Models\Libro-Coches','id','idCoche');
+    public function coches()
+    {
+        return $this->hasMany(LibroCoches::class, 'idLibro', 'id');
     }
-    public function conductores() {
-        return $this->hasMany('App\Models\Libro-Conductores','id','idConductor');
+    public function conductores()
+    {
+        return $this->hasMany(LibroConductores::class, 'idLibro', 'id');
     }
 }

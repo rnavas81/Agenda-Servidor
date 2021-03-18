@@ -17,11 +17,17 @@ class LibroCoches extends Model
         'idLibro',
         'idCoche'
     ];
-    public function agenda() {
-        $this->hasOne('App\Models\Agenda-Entrada','idLibro','id');
+    protected $hidden = [
+        'idLibro',
+        'idCoche'
+    ];
+    public function libro()
+    {
+        return $this->hasOne(LibroEntrada::class, 'idLibro', 'id');
     }
-    public function coche() {
-        $this->hasOne('App\Models\Agenda-Entrada','idCoche','id');
+    public function coche()
+    {
+        return $this->belongsTo(Coche::class, 'idCoche', 'id');
     }
 }
 

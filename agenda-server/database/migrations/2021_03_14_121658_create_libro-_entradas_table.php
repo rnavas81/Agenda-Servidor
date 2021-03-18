@@ -41,8 +41,8 @@ class CreateLibroEntradasTable extends Migration
             $table->id();
             $table->timestamps();
             $table->tinyInteger('habilitado')->default(1);
-            $table->integer('usuario');
-            $table->integer('idAgenda');
+            $table->integer('idUsuario');
+            $table->integer('idAgenda')->nullable();
             $table->date('salidaFecha')->nullable();
             $table->time('salidaHora')->nullable();
             $table->string('salidaLugar',500)->nullable();
@@ -51,7 +51,7 @@ class CreateLibroEntradasTable extends Migration
             $table->string('llegadaLugar',500)->nullable();
             $table->string('itinerario',1000)->nullable();
             $table->float('kms',12,3)->nullable();
-            $table->integer('cliente')->nullable()->unsigned();
+            $table->integer('idCliente')->nullable()->unsigned();
             $table->string('clienteDetalle',500)->nullable();
             $table->integer('facturarA')->nullable()->unsigned();
             $table->string('contacto',100)->nullable();

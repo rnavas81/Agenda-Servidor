@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Agenda;
+use App\Http\Controllers\Libro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -66,14 +67,15 @@ Route::delete('/agenda/{id}', [Agenda::class, 'delete']);
 Route::put('/agenda/confirmar/{id}', [Agenda::class, 'confirm']);
 
 /******* LIBRO *******/
-Route::get('/libro', [App\Http\Controllers\Libro::class, 'edit']);
+// Recupera los datos de la libro
+Route::get('/libro', [Libro::class, 'getAll']);
 // Recupera los datos de una entrada de la libro
-Route::get('/libro/{id}', [App\Http\Controllers\Libro::class, 'edit']);
+Route::get('/libro/{id}', [Libro::class, 'get']);
 // Busca las entradas de la libro en una fecha
-Route::get('/libro/entradas/{fecha}', [App\Http\Controllers\Libro::class, 'edit']);
+Route::get('/libro/entradas/{fecha}', [Libro::class, 'getByFecha']);
 // Nueva entrada de libro
-Route::post('/libro', [App\Http\Controllers\Libro::class, 'edit']);
+Route::post('/libro', [Libro::class, 'insert']);
 // Actualiza una entrada de libro
-Route::put('/libro/{id}', [App\Http\Controllers\Libro::class, 'edit']);
+Route::put('/libro/{id}', [Libro::class, 'update']);
 // Elimina una entrada de libro
-Route::delete('/libro/{id}', [App\Http\Controllers\Libro::class, 'edit']);
+Route::delete('/libro/{id}', [Libro::class, 'delete']);

@@ -17,10 +17,16 @@ class LibroConductores extends Model
         'idLibro',
         'idConductor'
     ];
-    public function agenda() {
-        $this->hasOne('App\Models\Agenda-Entrada','idLibro','id');
+    protected $hidden = [
+        'idLibro',
+        'idConductor'
+    ];
+    public function libro()
+    {
+        return $this->hasOne(LibroEntrada::class, 'idLibro', 'id');
     }
-    public function coche() {
-        $this->hasOne('App\Models\Condcutor','idConductor','id');
+    public function conductor()
+    {
+        return $this->belongsTo(Conductor::class, 'idConductor', 'id');
     }
 }
