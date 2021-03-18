@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\Agenda;
 use App\Http\Controllers\Libro;
+use App\Http\Controllers\Cliente;
+use App\Http\Controllers\Coche;
+use App\Http\Controllers\Conductor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -39,16 +42,42 @@ Route::middleware('auth:api')->get('/login', function (Request $request) {
 /******* USUARIOS *******/
 Route::get('/usuarios', [App\Http\Controllers\Usuarios::class, 'edit']);
 Route::get('/usuario', [App\Http\Controllers\Usuarios::class, 'edit']);
-/******* CONDUCTORES *******/
-Route::get('/conductores', [App\Http\Controllers\Usuarios::class, 'edit']);
-Route::get('/conductor', [App\Http\Controllers\Usuarios::class, 'edit']);
+
 /******* COCHES *******/
-Route::get('/coches', [App\Http\Controllers\Usuarios::class, 'edit']);
-Route::get('/coche', [App\Http\Controllers\Usuarios::class, 'edit']);
+// Recupera los coches
+Route::get('/coche', [Coche::class, 'getAll']);
+// Recupera los datos de un coche
+Route::get('/coche/{id}', [Coche::class, 'get']);
+// Nueva entrada de coche
+Route::post('/coche', [Coche::class, 'insert']);
+// Actualiza una entrada de coche
+Route::put('/coche/{id}', [Coche::class, 'update']);
+// Elimina una entrada de coche
+Route::delete('/coche/{id}', [Coche::class, 'delete']);
+
+/******* CONDUCTORES *******/
+// Recupera los conductores
+Route::get('/conductor', [Conductor::class, 'getAll']);
+// Recupera los datos de un conductor
+Route::get('/conductor/{id}', [Conductor::class, 'get']);
+// Nueva entrada de conductor
+Route::post('/conductor', [Conductor::class, 'insert']);
+// Actualiza una entrada de conductor
+Route::put('/conductor/{id}', [Conductor::class, 'update']);
+// Elimina una entrada de conductor
+Route::delete('/conductor/{id}', [Conductor::class, 'delete']);
+
 /******* CLIENTES *******/
 // Recupera los clientes
-Route::get('/clientes', [App\Http\Controllers\Usuarios::class, 'edit']);
-Route::get('/cliente', [App\Http\Controllers\Usuarios::class, 'edit']);
+Route::get('/cliente', [Cliente::class, 'getAll']);
+// Recupera los datos de un cliente
+Route::get('/cliente/{id}', [Cliente::class, 'get']);
+// Nueva entrada de cliente
+Route::post('/cliente', [Cliente::class, 'insert']);
+// Actualiza una entrada de cliente
+Route::put('/cliente/{id}', [Cliente::class, 'update']);
+// Elimina una entrada de cliente
+Route::delete('/cliente/{id}', [Cliente::class, 'delete']);
 
 /******* AGENDA *******/
 // Recupera los datos de la agenda
