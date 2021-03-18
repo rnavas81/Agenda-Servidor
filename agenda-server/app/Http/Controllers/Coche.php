@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cliente as ModelsCliente;
+use App\Models\Coche as ModelsCoche;
 use Illuminate\Http\Request;
 
-class Cliente extends Controller
+class Coche extends Controller
 {
-
     public function getAll(Request $request)
     {
         $entradas = $this->getDB();
@@ -59,9 +58,9 @@ class Cliente extends Controller
      */
     public function getDB($where = [], $cuantas = false)
     {
-        $entradas = ModelsCliente::where('habilitado', 1);
+        $entradas = ModelsCoche::where('habilitado', 1);
         if (isset($where['id'])) $entradas = $entradas->where('id', $where['id']);
-        $entradas = $entradas->orderBy('nombre');
+        $entradas = $entradas->orderBy('matricula');
         if (!$cuantas) {
             $entradas = $entradas->get();
         } elseif ($cuantas == 1) {
@@ -74,7 +73,7 @@ class Cliente extends Controller
      */
     public function insertDB($data)
     {
-        $nuevo = ModelsCliente::create($data);
+        $nuevo = ModelsCoche::create($data);
         return $nuevo;
     }
     /**
@@ -82,7 +81,7 @@ class Cliente extends Controller
      */
     public function updateDB($id, $data)
     {
-        $update = ModelsCliente::where('id', $id)->update($data);
+        $update = ModelsCoche::where('id', $id)->update($data);
         if ($update > 0) {
             return $this->getDB(['id' => $id], 1);
         } else {
@@ -94,15 +93,14 @@ class Cliente extends Controller
      */
     public function deleteDB($id)
     {
-        return ModelsCliente::where('id', $id)->update([
+        return ModelsCoche::where('id', $id)->update([
             'habilitado' => 0
         ]) == 1;
     }
     public function getRequestData(Request $request)
     {
         $data=[];
-        if (isset($request['nombre'])) $data['nombre'] = $request['nombre'];
-        if (isset($request['telefono'])) $data['telefono'] = $request['telefono'];
+        if (isset($request['matricula'])) $data['matricula'] = $request['matricula'];
         return $data;
     }
 }
