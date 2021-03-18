@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Agenda;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Libro;
 use App\Http\Controllers\Cliente;
 use App\Http\Controllers\Coche;
@@ -33,15 +34,11 @@ Route::get('/test', function (Request $request) {
     }
 });
 /******* ACCESO *******/
-Route::middleware('auth:api')->get('/login', function (Request $request) {
-    return $request->user();
-});
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::get('/login', [AuthController::class,'login']);
+
 /******* USUARIOS *******/
-Route::get('/usuarios', [App\Http\Controllers\Usuarios::class, 'edit']);
-Route::get('/usuario', [App\Http\Controllers\Usuarios::class, 'edit']);
+// Route::get('/usuarios', [App\Http\Controllers\Usuarios::class, 'edit']);
+// Route::get('/usuario', [App\Http\Controllers\Usuarios::class, 'edit']);
 
 /******* COCHES *******/
 // Recupera los coches
