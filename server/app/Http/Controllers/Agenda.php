@@ -5,19 +5,24 @@ namespace App\Http\Controllers;
 use App\Models\AgendaCoches;
 use App\Models\AgendaConductores;
 use App\Models\AgendaEntrada;
+use App\Models\Cliente;
+use App\Models\Coche;
+use App\Models\Conductor;
 use App\Models\LibroEntrada;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Agenda extends Controller
 {
     public function getAll(Request $request)
     {
-        $entradas = $this->getDB();
+        $entradas = $this->getDB(["confirmada" => false]);
         return response()->json($entradas, 200);
     }
     public function get(Request $request, $id)
     {
-        $entrada = $this->getDB(['id'=>$id],1);
+        if ($id == 0) $entrada = new AgendaEntrada();
+        else $entrada = $this->getDB(['id' => $id], 1);
         if (!empty($entrada))
             return response()->json($entrada, 200);
         else
@@ -25,35 +30,54 @@ class Agenda extends Controller
     }
     public function getByFecha(Request $request, $fecha)
     {
-        $entradas = $this->getDB(['salidaFecha'=>$fecha]);
+        $entradas = $this->getDB(['salidaFecha' => $fecha, "confirmada" => false]);
         return response()->json($entradas, 200);
     }
     public function insert(Request $request)
     {
-        $data = $this->getRequestData($request);
-        $nuevo = $this->insertDB($data);
-        if ($nuevo) {
-            $coches = isset($request['coches'])?$request['coches']:[];
-            $this->addCoches($nuevo->id,$coches);
-            $conductores = isset($request['conductores'])?$request['conductores']:[];
-            $this->addConductores($nuevo->id,$conductores);
-            return response()->json($nuevo, 201);
-        } else {
-            return response()->noContent(406);
+        try {
+            $data = $this->getRequestData($request);
+            if ($request->user()) {
+                $data['idUsuario'] = $request->user()->id;
+            } else {
+                $data['idUsuario'] = 0;
+            }
+            DB::beginTransaction();
+            $nuevo = $this->insertDB($data);
+            if ($nuevo) {
+                $coches = isset($request['coches']) ? $request['coches'] : [];
+                $this->addCoches($nuevo->id, $coches);
+                $conductores = isset($request['conductores']) ? $request['conductores'] : [];
+                $this->addConductores($nuevo->id, $conductores);
+                DB::commit();
+                return response()->json($nuevo, 201);
+            } else {
+                DB::rollBack();
+                return response()->noContent(406);
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
         }
     }
     public function update(Request $request, $id)
     {
-        $data = $this->getRequestData($request);
-        $entrada = $this->updateDB($id, $data);
-        if ($entrada) {
-            $coches = isset($request['coches'])?$request['coches']:[];
-            $this->addCoches($entrada->id,$coches);
-            $conductores = isset($request['conductores'])?$request['conductores']:[];
-            $this->addConductores($entrada->id,$conductores);
-            return response()->json($entrada, 201);
-        } else {
-            return response()->noContent(406);
+        try {
+            $data = $this->getRequestData($request);
+            DB::beginTransaction();
+            $entrada = $this->updateDB($id, $data);
+            if ($entrada) {
+                $coches = isset($request['coches']) ? $request['coches'] : [];
+                $this->addCoches($entrada->id, $coches);
+                $conductores = isset($request['conductores']) ? $request['conductores'] : [];
+                $this->addConductores($entrada->id, $conductores);
+                DB::commit();
+                return response()->json($entrada, 201);
+            } else {
+                DB::rollBack();
+                return response()->noContent(406);
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
         }
     }
     /**
@@ -73,13 +97,13 @@ class Agenda extends Controller
     public function confirm(Request $request, $id)
     {
         // Actualiza los datos de la entrada
-        $entrada = $this->updateDB($id,['confirmada'=>1]);
-        if($entrada){
+        $entrada = $this->updateDB($id, ['confirmada' => 1]);
+        if ($entrada) {
             // TODO: Insertar nueva entrada en el libro
             $data = $entrada->toArray();
             $extra = $this->toValidArray($data);
-            $nueva=app(Libro::class)->insertDB($data);
-            if($nueva){
+            $nueva = app(Libro::class)->insertDB($data);
+            if ($nueva) {
                 return response()->json($nueva, 200);
             } else {
                 return response()->noContent(406);
@@ -92,15 +116,19 @@ class Agenda extends Controller
      * Recupera información de las entradas de la base de datos
      * @param Integer $id identificador de la entrada
      */
-    public function getDB($where=[],$cuantas=false)
+    public function getDB($where = [], $cuantas = false)
     {
         $entradas = AgendaEntrada::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
-        if(isset($where['id']))$entradas = $entradas->where('id', $where['id']);
-        if(isset($where['salidaFecha']))$entradas = $entradas->where('salidaFecha', $where['salidaFecha']);
-        $entradas = $entradas->orderBy('salidaHora');
-        if(!$cuantas){
+        if (isset($where['id'])) $entradas = $entradas->where('id', $where['id']);
+        if (isset($where['salidaFecha'])) $entradas = $entradas->where('salidaFecha', $where['salidaFecha']);
+        if (isset($where['confirmada'])) $entradas = $entradas->where('confirmada', $where['confirmada'] ? 1 : 0);
+        $entradas = $entradas->orderBy('salidaFecha')
+            ->orderBy('salidaHora')
+            ->orderBy('llegadaFecha')
+            ->orderBy('llegadaHora');
+        if (!$cuantas) {
             $entradas = $entradas->get();
-        } elseif($cuantas == 1){
+        } elseif ($cuantas == 1) {
             $entradas = $entradas->first();
         }
         return $entradas;
@@ -118,9 +146,9 @@ class Agenda extends Controller
      */
     public function updateDB($id, $data)
     {
-        $update = AgendaEntrada::where('id', $id)->where('habilitado',1)->update($data);
+        $update = AgendaEntrada::where('id', $id)->where('habilitado', 1)->update($data);
         if ($update == 1) {
-            return $this->getDB(['id'=>$id],1);
+            return $this->getDB(['id' => $id], 1);
         } else {
             return false;
         }
@@ -138,11 +166,23 @@ class Agenda extends Controller
      * Elimina los registros previos
      * Inserta los coches asignados
      */
-    public function addCoches($idAgenda,$idsCoches){
-        AgendaCoches::where('idAgenda',$idAgenda)->delete();
+    public function addCoches($idAgenda, $idsCoches)
+    {
+        AgendaCoches::where('idAgenda', $idAgenda)->delete();
         foreach ($idsCoches as $idCoche) {
+            if (!is_int($idCoche)) {
+                $coche = Coche::where('matricula', $idCoche)->first();
+                if ($coche) {
+                    $idCoche = $coche->id;
+                } else {
+                    $coche = Coche::create([
+                        'matricula' => $idCoche
+                    ]);
+                    $idCoche = $coche->id;
+                }
+            }
             AgendaCoches::create([
-                'idAgenda'=>$idAgenda,'idCoche'=>$idCoche
+                'idAgenda' => $idAgenda, 'idCoche' => $idCoche
             ]);
         }
     }
@@ -150,24 +190,32 @@ class Agenda extends Controller
      * Elimina los registros previos
      * Inserta los conductores asignados
      */
-    public function addConductores($idAgenda,$idsConductores){
-        AgendaConductores::where('idAgenda',$idAgenda)->delete();
+    public function addConductores($idAgenda, $idsConductores)
+    {
+        AgendaConductores::where('idAgenda', $idAgenda)->delete();
         foreach ($idsConductores as $idConductor) {
+            if (!is_int($idConductor)) {
+                $conductor = Conductor::where('nombre', $idConductor)->first();
+                if ($conductor) {
+                    $idConductor = $conductor->id;
+                } else {
+                    $conductor = Conductor::create([
+                        'nombre' => $idConductor
+                    ]);
+                    $idConductor = $conductor->id;
+                }
+            }
             AgendaConductores::create([
-                'idAgenda'=>$idAgenda,'idConductor'=>$idConductor
+                'idAgenda' => $idAgenda, 'idConductor' => $idConductor
             ]);
         }
     }
     /**
      * Recupera los datos enviados
      */
-    public function getRequestData(Request $request){
+    public function getRequestData(Request $request)
+    {
         $data = [];
-        if ($request->user()) {
-            $data['idUsuario'] = $request->user()->id;
-        } else {
-            $data['idUsuario'] = 0;
-        }
         if (isset($request['salidaFecha'])) $data['salidaFecha'] = $request['salidaFecha'];
         if (isset($request['salidaHora'])) $data['salidaHora'] = $request['salidaHora'];
         if (isset($request['salidaLugar'])) $data['salidaLugar'] = $request['salidaLugar'];
@@ -176,6 +224,16 @@ class Agenda extends Controller
         if (isset($request['llegadaLugar'])) $data['llegadaLugar'] = $request['llegadaLugar'];
         if (isset($request['itinerario'])) $data['itinerario'] = $request['itinerario'];
         if (isset($request['idCliente'])) $data['idCliente'] = $request['idCliente'];
+        if (isset($request['cliente'])) {
+            $cliente = Cliente::where('id', $request['cliente']['id'])->first();
+            if (!$cliente) {
+                $cliente = Cliente::create([
+                    'nombre' => $request['cliente']['nombre'],
+                    'telefono' => $request['cliente']['telefono']
+                ]);
+            }
+            $data['idCliente'] = $request['cliente']['id'];
+        }
         if (isset($request['clienteDetalle'])) $data['clienteDetalle'] = $request['clienteDetalle'];
         if (isset($request['presupuesto'])) $data['presupuesto'] = $request['presupuesto'];
         return $data;
@@ -183,13 +241,14 @@ class Agenda extends Controller
     /**
      * Formatea el array con los campos validdos
      */
-    public function toValidArray(&$data) {
-        if(isset($data['cliente']))$data['idCliente']=$data['cliente']['id'];
-        if(isset($data['usuario']))$data['idUsuario']=$data['usuario']['id'];
+    public function toValidArray(&$data)
+    {
+        if (isset($data['cliente'])) $data['idCliente'] = $data['cliente']['id'];
+        if (isset($data['usuario'])) $data['idUsuario'] = $data['usuario']['id'];
         $extra = [];
-        if(isset($data['coches']))$extra['coches']=$data['coches'];
-        if(isset($data['conductores']))$extra['conductores']=$data['conductores'];
-        unset($data['cliente'],$data['usuario'],$data['coches'],$data['conductores']);
+        if (isset($data['coches'])) $extra['coches'] = $data['coches'];
+        if (isset($data['conductores'])) $extra['conductores'] = $data['conductores'];
+        unset($data['cliente'], $data['usuario'], $data['coches'], $data['conductores']);
         return $extra;
     }
 }

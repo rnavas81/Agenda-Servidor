@@ -34,7 +34,7 @@ Route::get('/test', function (Request $request) {
     }
 });
 /******* ACCESO *******/
-Route::get('/login', [AuthController::class,'login']);
+Route::post('/login', [AuthController::class,'login']);
 
 /******* USUARIOS *******/
 // Route::get('/usuarios', [App\Http\Controllers\Usuarios::class, 'edit']);

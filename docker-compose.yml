@@ -13,7 +13,6 @@ services:
     #La ruta del volumen debe apuntar a la carpeta que contiene los datos de la base de datos
     volumes:
       - agenda-database:/var/lib/mysql
-    # TODO: Descomentar para cargar las variables de entorno del fichero .env
     # #Variables de entorno  para el contenedor
     environment:
       - MYSQL_ROOT_PASSWORD=Rivilla1940
@@ -40,7 +39,7 @@ services:
       - agenda
     # Se mapea la carpeta con una local
     volumes:
-      - ./agenda-server:/var/www/html/
+      - ./server:/var/www/html/
     # TODO:descomentar para producción
     # restart: always
 
