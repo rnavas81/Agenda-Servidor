@@ -20,7 +20,11 @@ class AuthController extends Controller
         }
         $user = auth()->user();
         $accessToken = auth()->user()->createToken('authToken')->accessToken;
-
-        return response()->json(['user'=>$user,'token'=>$accessToken], 200);
+        return response()->json(['user' => $user, 'token' => $accessToken], 200);
+    }
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+        return response()->noContent(200);
     }
 }

@@ -33,14 +33,14 @@ class CreateAgendaEntradasTable extends Migration
             $table->integer('idUsuario');
             $table->date('salidaFecha')->nullable();
             $table->time('salidaHora')->nullable();
-            $table->string('salidaLugar',500)->nullable();
+            $table->string('salidaLugar', 500)->nullable();
             $table->date('llegadaFecha')->nullable();
             $table->time('llegadaHora')->nullable();
-            $table->string('llegadaLugar',500)->nullable();
-            $table->string('itinerario',1000)->nullable();
+            $table->string('llegadaLugar', 500)->nullable();
+            $table->string('itinerario', 1000)->nullable();
             $table->integer('idCliente')->nullable()->unsigned();
-            $table->string('clienteDetalle',500)->nullable();
-            $table->float('presupuesto',12,3)->nullable();
+            $table->string('clienteDetalle', 500)->nullable();
+            $table->float('presupuesto', 12, 3)->nullable();
         });
     }
 

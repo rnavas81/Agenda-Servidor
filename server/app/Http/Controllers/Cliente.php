@@ -100,7 +100,7 @@ class Cliente extends Controller
     }
     public function getRequestData(Request $request)
     {
-        $data=[];
+        $data = [];
         if (isset($request['nombre'])) $data['nombre'] = $request['nombre'];
         if (isset($request['telefono'])) $data['telefono'] = $request['telefono'];
         return $data;

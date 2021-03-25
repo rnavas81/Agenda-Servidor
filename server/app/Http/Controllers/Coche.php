@@ -99,7 +99,7 @@ class Coche extends Controller
     }
     public function getRequestData(Request $request)
     {
-        $data=[];
+        $data = [];
         if (isset($request['matricula'])) $data['matricula'] = $request['matricula'];
         return $data;
     }

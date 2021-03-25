@@ -60,10 +60,11 @@ class DatabaseSeeder extends Seeder
         $fecha = new DateTime();
         $fecha->sub(new DateInterval('P1M'));
         $fin = new DateTime();
+        $fin->add(new DateInterval('P2M'));
         while ($fecha < $fin) {
-            $max = rand(5,20);
+            $max = rand(5, 20);
             for ($i = 0; $i <  $max; $i++) {
-                $init = rand(0,23);
+                $init = rand(0, 23);
                 $fecha->setTime($init, 0, 0);
 
                 $usuario = rand(1, 6);
@@ -111,21 +112,20 @@ class DatabaseSeeder extends Seeder
                 ]);
                 \App\Models\LibroCoches::create([
                     'idLibro' => $entrada->id,
-                    'idCoche' => $i
+                    'idCoche' => $coche
                 ]);
                 \App\Models\LibroConductores::create([
                     'idLibro' => $entrada->id,
-                    'idConductor' => $i
+                    'idConductor' => $conductor
                 ]);
             }
             $fecha->add(new DateInterval('P1D'));
         }
         $fecha->sub(new DateInterval('P1M'));
-        $fin->add(new DateInterval('P2M'));
         while ($fecha < $fin) {
-            $max = rand(3,5);
+            $max = rand(3, 5);
             for ($i = 0; $i <  $max; $i++) {
-                $init = rand(0,23);
+                $init = rand(0, 23);
                 $fecha->setTime($init, 0, 0);
                 $usuario = rand(1, 6);
                 $cliente = rand(1, 10);
@@ -134,7 +134,7 @@ class DatabaseSeeder extends Seeder
                 $llegada = new DateTime($fecha->format("Y-m-d H:i:s"));
                 $d = rand(1, 4);
                 $llegada->add(new DateInterval('P' . $d . 'D'));
-                $init = rand(0,23);
+                $init = rand(0, 23);
                 $llegada->setTime($init, 0, 0);
                 $sitio = $fak->city;
                 $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
@@ -152,11 +152,11 @@ class DatabaseSeeder extends Seeder
                 ]);
                 \App\Models\AgendaCoches::create([
                     'idAgenda' => $entrada->id,
-                    'idCoche' => $i
+                    'idCoche' => $coche
                 ]);
                 \App\Models\AgendaConductores::create([
                     'idAgenda' => $entrada->id,
-                    'idConductor' => $i
+                    'idConductor' => $conductor
                 ]);
             }
             $fecha->add(new DateInterval('P1D'));

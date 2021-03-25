@@ -17,7 +17,7 @@ class CreateCochesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->tinyInteger('habilitado')->default(1);
-            $table->string('matricula',500);
+            $table->string('matricula', 500);
         });
     }
 

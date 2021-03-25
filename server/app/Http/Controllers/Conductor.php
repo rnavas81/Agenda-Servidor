@@ -99,7 +99,7 @@ class Conductor extends Controller
     }
     public function getRequestData(Request $request)
     {
-        $data=[];
+        $data = [];
         if (isset($request['nombre'])) $data['nombre'] = $request['nombre'];
         return $data;
     }

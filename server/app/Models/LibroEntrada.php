@@ -43,8 +43,9 @@ class LibroEntrada extends Model
         'updated_at',
         'habilitado'
     ];
-    public function agenda(){
-        return $this->hasOne(AgendaEntrada::class,'id','idAgenda');
+    public function agenda()
+    {
+        return $this->hasOne(AgendaEntrada::class, 'id', 'idAgenda');
     }
     public function usuario()
     {

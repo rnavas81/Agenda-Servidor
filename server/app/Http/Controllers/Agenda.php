@@ -9,6 +9,9 @@ use App\Models\Cliente;
 use App\Models\Coche;
 use App\Models\Conductor;
 use App\Models\LibroEntrada;
+use DateInterval;
+use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -33,6 +36,18 @@ class Agenda extends Controller
         $entradas = $this->getDB(['salidaFecha' => $fecha, "confirmada" => false]);
         return response()->json($entradas, 200);
     }
+    public function getSemana(Request $request, $fecha)
+    {
+        $f = new DateTime($fecha);
+        $dia = (int)$f->format('N') - 1;
+        $f->sub(new DateInterval('P' . $dia . 'D'));
+        $data = [];
+        for ($i = 0; $i < 7; $i++) {
+            $data[$f->format("Y-m-d")] = $this->getDB(['salidaFecha' => $fecha, "confirmada" => false]);
+            $f->add(new DateInterval('P1D'));
+        }
+        return response()->json($data, 200);
+    }
     public function insert(Request $request)
     {
         try {
@@ -52,11 +67,11 @@ class Agenda extends Controller
                 DB::commit();
                 return response()->json($nuevo, 201);
             } else {
-                DB::rollBack();
-                return response()->noContent(406);
+                throw new Exception("Error al crear nueva entrada en la agenda", 1);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
+            return response()->noContent(406);
         }
     }
     public function update(Request $request, $id)
@@ -73,11 +88,11 @@ class Agenda extends Controller
                 DB::commit();
                 return response()->json($entrada, 201);
             } else {
-                DB::rollBack();
-                return response()->noContent(406);
+                throw new Exception("Error al modificar la entrada de la agenda", 1);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
+            return response()->noContent(406);
         }
     }
     /**
@@ -99,13 +114,22 @@ class Agenda extends Controller
         // Actualiza los datos de la entrada
         $entrada = $this->updateDB($id, ['confirmada' => 1]);
         if ($entrada) {
-            // TODO: Insertar nueva entrada en el libro
-            $data = $entrada->toArray();
-            $extra = $this->toValidArray($data);
-            $nueva = app(Libro::class)->insertDB($data);
-            if ($nueva) {
-                return response()->json($nueva, 200);
-            } else {
+            try {
+                $data = $entrada->toArray();
+                $extra = $this->toValidArray($data);
+                $data["idUsuario"] = $request->user()->id;
+                DB::beginTransaction();
+                $nuevo = app(Libro::class)->insertDB($data);
+                if ($nuevo) {
+                    app(Libro::class)->addCoches($nuevo->id, $extra["coches"]);
+                    app(Libro::class)->addConductores($nuevo->id, $extra["conductores"]);
+                    DB::commit();
+                    return response()->json($nuevo, 201);
+                } else {
+                    throw new Exception("Error al crear nueva entrada en el libro", 1);
+                }
+            } catch (\Throwable $th) {
+                DB::rollBack();
                 return response()->noContent(406);
             }
         } else {
@@ -243,12 +267,18 @@ class Agenda extends Controller
      */
     public function toValidArray(&$data)
     {
+        $data['idAgenda'] = $data["id"];
         if (isset($data['cliente'])) $data['idCliente'] = $data['cliente']['id'];
-        if (isset($data['usuario'])) $data['idUsuario'] = $data['usuario']['id'];
-        $extra = [];
-        if (isset($data['coches'])) $extra['coches'] = $data['coches'];
-        if (isset($data['conductores'])) $extra['conductores'] = $data['conductores'];
-        unset($data['cliente'], $data['usuario'], $data['coches'], $data['conductores']);
+        $extra = [
+            "coches" => [], "conductores" => []
+        ];
+        foreach ($data['coches'] as $coche) {
+            $extra["coches"][] = $coche["coche"]['id'];
+        }
+        foreach ($data['conductores'] as $conductor) {
+            $extra["conductores"][] = $conductor["conductor"]['id'];
+        }
+        unset($data["id"], $data['cliente'], $data['usuario'], $data["conductores"], $data["coches"]);
         return $extra;
     }
 }

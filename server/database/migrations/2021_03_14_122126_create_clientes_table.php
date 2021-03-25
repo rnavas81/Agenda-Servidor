@@ -17,8 +17,8 @@ class CreateClientesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->tinyInteger('habilitado')->default(1);
-            $table->string('nombre',500);
-            $table->string('telefono',16)->nullable();
+            $table->string('nombre', 500);
+            $table->string('telefono', 16)->nullable();
         });
     }
 

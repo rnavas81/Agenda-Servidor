@@ -30,4 +30,3 @@ class LibroCoches extends Model
         return $this->belongsTo(Coche::class, 'idCoche', 'id');
     }
 }
-
