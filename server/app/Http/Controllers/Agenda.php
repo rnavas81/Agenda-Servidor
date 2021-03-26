@@ -43,7 +43,7 @@ class Agenda extends Controller
         $f->sub(new DateInterval('P' . $dia . 'D'));
         $data = [];
         for ($i = 0; $i < 7; $i++) {
-            $data[$f->format("Y-m-d")] = $this->getDB(['salidaFecha' => $fecha, "confirmada" => false]);
+            $data[$f->format("Y-m-d")] = $this->getDB(['salidaFecha' => $f, "confirmada" => false]);
             $f->add(new DateInterval('P1D'));
         }
         return response()->json($data, 200);
