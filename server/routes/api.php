@@ -40,8 +40,12 @@ Route::group([], function () {
     Route::group([
         'middleware' => 'auth:api'
     ], function () {
-        // USUARIOS
+
+        /******* USUARIOS *******/
         Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/test',function (Request $params){
+            return response()->noContent(200);
+        });
 
         /******* AGENDA *******/
         // Recupera los datos de la agenda
@@ -112,5 +116,6 @@ Route::group([], function () {
         Route::put('/libro/{id}', [Libro::class, 'update']);
         // Elimina una entrada de libro
         Route::delete('/libro/{id}', [Libro::class, 'delete']);
+
     });
 });
