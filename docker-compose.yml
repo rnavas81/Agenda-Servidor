@@ -39,7 +39,7 @@ services:
       - agenda
     # Se mapea la carpeta con una local
     volumes:
-      - ./server:/var/www/html/
+      - .:/var/www/html/
     # TODO:descomentar para producción
     # restart: always
 
