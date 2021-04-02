@@ -6,29 +6,27 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-
-class AgendaCoches extends Model
+class AvisoConductores extends Model
 {
     use HasFactory, Notifiable;
     public $primaryKey = null;
     public $incrementing = false;
     public $timestamps = false;
-    protected $table = 'agenda-coches';
-
+    protected $table = 'aviso-conductores';
     protected $fillable = [
-        'idAgenda',
-        'idCoche'
+        'idAviso',
+        'idConductor'
     ];
     protected $hidden = [
-        'idAgenda',
-        'idCoche'
+        'idAviso',
+        'idConductor'
     ];
-    public function agenda()
+    public function aviso()
     {
-        return $this->hasOne(AgendaEntrada::class, 'idAgenda', 'id');
+        return $this->hasOne(AvisoEntrada::class, 'idAviso', 'id');
     }
-    public function coche()
+    public function conductor()
     {
-        return $this->belongsTo(Coche::class, 'idCoche', 'id');
+        return $this->belongsTo(Conductor::class, 'idConductor', 'id');
     }
 }

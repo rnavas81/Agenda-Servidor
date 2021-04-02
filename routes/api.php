@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Agenda;
+use App\Http\Controllers\Aviso;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Libro;
 use App\Http\Controllers\Cliente;
@@ -48,22 +48,22 @@ Route::group([], function () {
         });
 
         /******* AGENDA *******/
-        // Recupera los datos de la agenda
-        Route::get('/agenda', [Agenda::class, 'getAll']);
-        // Recupera los datos de una entrada de la agenda
-        Route::get('/agenda/{id}', [Agenda::class, 'get']);
-        // Busca las entradas de la agenda en una fecha
-        Route::get('/agenda/entradas/{fecha}', [Agenda::class, 'getByFecha']);
+        // Recupera los datos del aviso
+        Route::get('/aviso', [Aviso::class, 'getAll']);
+        // Recupera los datos de una entrada del aviso
+        Route::get('/aviso/{id}', [Aviso::class, 'get']);
+        // Busca las entradas del aviso en una fecha
+        Route::get('/aviso/entradas/{fecha}', [Aviso::class, 'getByFecha']);
         // Busca las entradas de una semana
-        Route::get('/agenda/semana/{fecha}', [Agenda::class, 'getSemana']);
-        // Nueva entrada de agenda
-        Route::post('/agenda', [Agenda::class, 'insert']);
-        // Actualiza una entrada de agenda
-        Route::put('/agenda/{id}', [Agenda::class, 'update']);
-        // Elimina una entrada de agenda
-        Route::delete('/agenda/{id}', [Agenda::class, 'delete']);
-        // Confirma una entrada de agenda
-        Route::put('/agenda/confirmar/{id}', [Agenda::class, 'confirm']);
+        Route::get('/aviso/semana/{fecha}', [Aviso::class, 'getSemana']);
+        // Nueva entrada de aviso
+        Route::post('/aviso', [Aviso::class, 'insert']);
+        // Actualiza una entrada de aviso
+        Route::put('/aviso/{id}', [Aviso::class, 'update']);
+        // Elimina una entrada de aviso
+        Route::delete('/aviso/{id}', [Aviso::class, 'delete']);
+        // Confirma una entrada de aviso
+        Route::put('/aviso/confirmar/{id}', [Aviso::class, 'confirm']);
 
         /******* COCHES *******/
         // Recupera los coches

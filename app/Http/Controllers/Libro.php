@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cliente;
 use App\Models\Coche;
 use App\Models\Conductor;
+use App\Models\Libro as ModelsLibro;
 use App\Models\LibroCoches;
 use App\Models\LibroConductores;
-use App\Models\LibroEntrada;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -23,7 +23,7 @@ class Libro extends Controller
     }
     public function get(Request $request, $id)
     {
-        if ($id == 0) $entrada = new LibroEntrada();
+        if ($id == 0) $entrada = new Libro();
         else $entrada = $this->getDB(['id' => $id], 1);
         if (!empty($entrada))
             return response()->json($entrada, 200);
@@ -112,7 +112,7 @@ class Libro extends Controller
      */
     public function getDB($where = [], $cuantas = false)
     {
-        $entradas = LibroEntrada::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
+        $entradas = ModelsLibro::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
         if (isset($where['id'])) $entradas = $entradas->where('id', $where['id']);
         if (isset($where['salidaFecha'])) $entradas = $entradas->where('salidaFecha', $where['salidaFecha']);
         $entradas = $entradas->orderBy('salidaFecha')
@@ -131,7 +131,7 @@ class Libro extends Controller
      */
     public function insertDB($data)
     {
-        $nuevo = LibroEntrada::create($data);
+        $nuevo = ModelsLibro::create($data);
         return $nuevo;
     }
     /**
@@ -139,7 +139,7 @@ class Libro extends Controller
      */
     public function updateDB($id, $data)
     {
-        $update = LibroEntrada::where('id', $id)->update($data);
+        $update = ModelsLibro::where('id', $id)->update($data);
         if ($update > 0) {
             return $this->getDB(['id' => $id], 1);
         } else {
@@ -151,7 +151,7 @@ class Libro extends Controller
      */
     public function deleteDB($id)
     {
-        return LibroEntrada::where('id', $id)->update([
+        return ModelsLibro::where('id', $id)->update([
             'habilitado' => 0
         ]) == 1;
     }

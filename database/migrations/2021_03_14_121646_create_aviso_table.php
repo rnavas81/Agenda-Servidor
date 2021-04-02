@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLibroEntradasTable extends Migration
+class CreateavisoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateLibroEntradasTable extends Migration
      */
     public function up()
     {
-        Schema::create('libro', function (Blueprint $table) {
+        Schema::create('aviso', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
             $table->tinyInteger('habilitado')->default(1);
+            $table->tinyInteger('confirmada')->default(0);
             $table->integer('idUsuario');
-            $table->integer('idAgenda')->nullable();
             $table->date('salidaFecha')->nullable();
             $table->time('salidaHora')->nullable();
             $table->string('salidaLugar', 500)->nullable();
@@ -26,20 +26,9 @@ class CreateLibroEntradasTable extends Migration
             $table->time('llegadaHora')->nullable();
             $table->string('llegadaLugar', 500)->nullable();
             $table->string('itinerario', 1000)->nullable();
-            $table->float('kms', 12, 3)->nullable();
             $table->integer('idCliente')->nullable()->unsigned();
             $table->string('clienteDetalle', 500)->nullable();
-            $table->integer('facturarA')->nullable()->unsigned();
-            $table->string('contacto', 100)->nullable();
-            $table->string('contactoTlf', 12)->nullable();
-            $table->float('importe', 12, 2)->nullable();
-            $table->tinyInteger('cobrado')->default(0);
-            $table->date('cobradoFecha')->nullable();
-            $table->string('cobradoForma', 255)->nullable();
-            $table->string('cobradoDetalle', 500)->nullable();
-            $table->string('gastos', 500)->nullable();
-            $table->string('facturaNombre', 500)->nullable();
-            $table->integer('facturaNumero')->nullable();
+            $table->float('presupuesto', 12, 3)->nullable();
         });
     }
 
@@ -50,6 +39,6 @@ class CreateLibroEntradasTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('libro');
+        Schema::dropIfExists('aviso');
     }
 }

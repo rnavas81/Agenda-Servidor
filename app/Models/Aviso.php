@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class AgendaEntrada extends Model
+class Aviso extends Model
 {
     use HasFactory, Notifiable;
-    protected $table = 'agenda';
+    protected $table = 'aviso';
     protected $fillable = [
         'salidaFecha',
         'salidaHora',
@@ -42,10 +42,10 @@ class AgendaEntrada extends Model
     }
     public function coches()
     {
-        return $this->hasMany(AgendaCoches::class, 'idAgenda', 'id');
+        return $this->hasMany(AvisoCoches::class, 'idAviso', 'id');
     }
     public function conductores()
     {
-        return $this->hasMany(AgendaConductores::class, 'idAgenda', 'id');
+        return $this->hasMany(AvisoConductores::class, 'idAviso', 'id');
     }
 }

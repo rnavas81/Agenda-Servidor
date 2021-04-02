@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AgendaCoches;
-use App\Models\AgendaConductores;
-use App\Models\AgendaEntrada;
+use App\Models\Aviso as ModelsAviso;
+use App\Models\AvisoCoches;
+use App\Models\AvisoConductores;
 use App\Models\Cliente;
 use App\Models\Coche;
 use App\Models\Conductor;
-use App\Models\LibroEntrada;
+use App\Models\Libro;
 use DateInterval;
 use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class Agenda extends Controller
+class Aviso extends Controller
 {
     public function getAll(Request $request)
     {
@@ -24,7 +24,7 @@ class Agenda extends Controller
     }
     public function get(Request $request, $id)
     {
-        if ($id == 0) $entrada = new AgendaEntrada();
+        if ($id == 0) $entrada = new Aviso();
         else $entrada = $this->getDB(['id' => $id], 1);
         if (!empty($entrada))
             return response()->json($entrada, 200);
@@ -67,7 +67,7 @@ class Agenda extends Controller
                 DB::commit();
                 return response()->json($nuevo, 201);
             } else {
-                throw new Exception("Error al crear nueva entrada en la agenda", 1);
+                throw new Exception("Error al crear nuevo aviso", 1);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -88,7 +88,7 @@ class Agenda extends Controller
                 DB::commit();
                 return response()->json($entrada, 201);
             } else {
-                throw new Exception("Error al modificar la entrada de la agenda", 1);
+                throw new Exception("Error al modificar el aviso", 1);
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -107,7 +107,7 @@ class Agenda extends Controller
         }
     }
     /**
-     * Pasa una entrada de la agenda al libro
+     * Pasa un aviso al libro
      */
     public function confirm(Request $request, $id)
     {
@@ -142,7 +142,7 @@ class Agenda extends Controller
      */
     public function getDB($where = [], $cuantas = false)
     {
-        $entradas = AgendaEntrada::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
+        $entradas = ModelsAviso::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
         if (isset($where['id'])) $entradas = $entradas->where('id', $where['id']);
         if (isset($where['salidaFecha'])) $entradas = $entradas->where('salidaFecha', $where['salidaFecha']);
         if (isset($where['confirmada'])) $entradas = $entradas->where('confirmada', $where['confirmada'] ? 1 : 0);
@@ -162,7 +162,7 @@ class Agenda extends Controller
      */
     public function insertDB($data)
     {
-        $nuevo = AgendaEntrada::create($data);
+        $nuevo = ModelsAviso::create($data);
         return $nuevo;
     }
     /**
@@ -170,7 +170,7 @@ class Agenda extends Controller
      */
     public function updateDB($id, $data)
     {
-        $update = AgendaEntrada::where('id', $id)->where('habilitado', 1)->update($data);
+        $update = ModelsAviso::where('id', $id)->where('habilitado', 1)->update($data);
         if ($update == 1) {
             return $this->getDB(['id' => $id], 1);
         } else {
@@ -182,7 +182,7 @@ class Agenda extends Controller
      */
     public function deleteDB($id)
     {
-        return AgendaEntrada::where('id', $id)->update([
+        return ModelsAviso::where('id', $id)->update([
             'habilitado' => 0
         ]) == 1;
     }
@@ -190,9 +190,9 @@ class Agenda extends Controller
      * Elimina los registros previos
      * Inserta los coches asignados
      */
-    public function addCoches($idAgenda, $idsCoches)
+    public function addCoches($idAviso, $idsCoches)
     {
-        AgendaCoches::where('idAgenda', $idAgenda)->delete();
+        AvisoCoches::where('idAviso', $idAviso)->delete();
         foreach ($idsCoches as $idCoche) {
             if (!is_int($idCoche)) {
                 $coche = Coche::where('matricula', $idCoche)->first();
@@ -205,8 +205,8 @@ class Agenda extends Controller
                     $idCoche = $coche->id;
                 }
             }
-            AgendaCoches::create([
-                'idAgenda' => $idAgenda, 'idCoche' => $idCoche
+            AvisoCoches::create([
+                'idAviso' => $idAviso, 'idCoche' => $idCoche
             ]);
         }
     }
@@ -214,9 +214,9 @@ class Agenda extends Controller
      * Elimina los registros previos
      * Inserta los conductores asignados
      */
-    public function addConductores($idAgenda, $idsConductores)
+    public function addConductores($idAviso, $idsConductores)
     {
-        AgendaConductores::where('idAgenda', $idAgenda)->delete();
+        AvisoConductores::where('idAviso', $idAviso)->delete();
         foreach ($idsConductores as $idConductor) {
             if (!is_int($idConductor)) {
                 $conductor = Conductor::where('nombre', $idConductor)->first();
@@ -229,8 +229,8 @@ class Agenda extends Controller
                     $idConductor = $conductor->id;
                 }
             }
-            AgendaConductores::create([
-                'idAgenda' => $idAgenda, 'idConductor' => $idConductor
+            AvisoConductores::create([
+                'idAviso' => $idAviso, 'idConductor' => $idConductor
             ]);
         }
     }
@@ -267,7 +267,7 @@ class Agenda extends Controller
      */
     public function toValidArray(&$data)
     {
-        $data['idAgenda'] = $data["id"];
+        $data['idAviso'] = $data["id"];
         if (isset($data['cliente'])) $data['idCliente'] = $data['cliente']['id'];
         $extra = [
             "coches" => [], "conductores" => []

@@ -5,8 +5,6 @@ namespace Database\Seeders;
 use DateInterval;
 use DateTime;
 use Illuminate\Database\Seeder;
-use Faker\Generator as Faker;
-use Illuminate\Support\Facades\Date;
 
 class DatabaseSeeder extends Seeder
 {
@@ -56,7 +54,7 @@ class DatabaseSeeder extends Seeder
                 'nombre' => $fak->firstName . " " . $fak->lastName,
             ]);
         }
-        // Crea entradas para agenda confirmadas y libro
+        // Crea entradas para aviso confirmadas y libro
         $fecha = new DateTime();
         $fecha->sub(new DateInterval('P1M'));
         $fin = new DateTime();
@@ -76,8 +74,8 @@ class DatabaseSeeder extends Seeder
                 $llegada->add(new DateInterval('P' . $d . 'D'));
                 $sitio = $fak->city;
                 $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
-                // Entradas de la agenda
-                $entrada = \App\Models\AgendaEntrada::create([
+                // Entradas de la aviso
+                $entrada = \App\Models\Aviso::create([
                     'idUsuario' => $usuario,
                     'salidaFecha' => $fecha->format('Y-m-d'),
                     'salidaHora' => $fecha->format('H:i:s'),
@@ -89,17 +87,17 @@ class DatabaseSeeder extends Seeder
                     'clienteDetalle' => $clienteDetalle,
                     'confirmada' => 1
                 ]);
-                \App\Models\AgendaCoches::create([
-                    'idAgenda' => $entrada->id,
+                \App\Models\AvisoCoches::create([
+                    'idAviso' => $entrada->id,
                     'idCoche' => $coche
                 ]);
-                \App\Models\AgendaConductores::create([
-                    'idAgenda' => $entrada->id,
+                \App\Models\AvisoConductores::create([
+                    'idAviso' => $entrada->id,
                     'idConductor' => $conductor
                 ]);
                 // Entradas del libro
-                $entrada = \App\Models\LibroEntrada::create([
-                    'idAgenda' => $entrada->id,
+                $entrada = \App\Models\Libro::create([
+                    'idAviso' => $entrada->id,
                     'idUsuario' => $usuario,
                     'salidaFecha' => $fecha->format('Y-m-d'),
                     'salidaHora' => $fecha->format('H:i:s'),
@@ -119,10 +117,7 @@ class DatabaseSeeder extends Seeder
                     'idConductor' => $conductor
                 ]);
             }
-            $fecha->add(new DateInterval('P1D'));
-        }
-        $fecha->sub(new DateInterval('P1M'));
-        while ($fecha < $fin) {
+
             $max = rand(3, 5);
             for ($i = 0; $i <  $max; $i++) {
                 $init = rand(0, 23);
@@ -138,7 +133,7 @@ class DatabaseSeeder extends Seeder
                 $llegada->setTime($init, 0, 0);
                 $sitio = $fak->city;
                 $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
-                $entrada = \App\Models\AgendaEntrada::create([
+                $entrada = \App\Models\Aviso::create([
                     'idUsuario' => $usuario,
                     'salidaFecha' => $fecha->format('Y-m-d'),
                     'salidaHora' => $fecha->format('H:i:s'),
@@ -150,12 +145,12 @@ class DatabaseSeeder extends Seeder
                     'clienteDetalle' => $fak->sentence($nbWords = 6, $variableNbWords = true),
 
                 ]);
-                \App\Models\AgendaCoches::create([
-                    'idAgenda' => $entrada->id,
+                \App\Models\AvisoCoches::create([
+                    'idAviso' => $entrada->id,
                     'idCoche' => $coche
                 ]);
-                \App\Models\AgendaConductores::create([
-                    'idAgenda' => $entrada->id,
+                \App\Models\AvisoConductores::create([
+                    'idAviso' => $entrada->id,
                     'idConductor' => $conductor
                 ]);
             }

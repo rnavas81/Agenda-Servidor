@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class LibroEntrada extends Model
+class Libro extends Model
 {
     use HasFactory, Notifiable;
     protected $table = 'libro';
     protected $fillable = [
         'idCliente',
         'idUsuario',
-        'idAgenda',
+        'idAviso',
         'salidaFecha',
         'salidaHora',
         'salidaLugar',
@@ -39,13 +39,12 @@ class LibroEntrada extends Model
     protected $hidden = [
         'idCliente',
         'idUsuario',
-        'created_at',
         'updated_at',
         'habilitado'
     ];
-    public function agenda()
+    public function aviso()
     {
-        return $this->hasOne(AgendaEntrada::class, 'id', 'idAgenda');
+        return $this->hasOne(AgendaEntrada::class, 'id', 'idAviso');
     }
     public function usuario()
     {
