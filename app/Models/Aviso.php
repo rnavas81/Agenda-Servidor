@@ -26,10 +26,8 @@ class Aviso extends Model
     protected $hidden = [
         'idCliente',
         'idUsuario',
-        'created_at',
         'updated_at',
         'habilitado',
-        'confirmada'
     ];
 
     public function usuario()

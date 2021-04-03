@@ -19,7 +19,7 @@ class Aviso extends Controller
 {
     public function getAll(Request $request)
     {
-        $entradas = $this->getDB(["confirmada" => false]);
+        $entradas = $this->getDB();
         return response()->json($entradas, 200);
     }
     public function get(Request $request, $id)
@@ -33,7 +33,7 @@ class Aviso extends Controller
     }
     public function getByFecha(Request $request, $fecha)
     {
-        $entradas = $this->getDB(['salidaFecha' => $fecha, "confirmada" => false]);
+        $entradas = $this->getDB(['salidaFecha' => $fecha]);
         return response()->json($entradas, 200);
     }
     public function getSemana(Request $request, $fecha)
@@ -43,7 +43,7 @@ class Aviso extends Controller
         $f->sub(new DateInterval('P' . $dia . 'D'));
         $data = [];
         for ($i = 0; $i < 7; $i++) {
-            $data[$f->format("Y-m-d")] = $this->getDB(['salidaFecha' => $f, "confirmada" => false]);
+            $data[$f->format("Y-m-d")] = $this->getDB(['salidaFecha' => $f]);
             $f->add(new DateInterval('P1D'));
         }
         return response()->json($data, 200);
@@ -145,11 +145,15 @@ class Aviso extends Controller
         $entradas = ModelsAviso::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
         if (isset($where['id'])) $entradas = $entradas->where('id', $where['id']);
         if (isset($where['salidaFecha'])) $entradas = $entradas->where('salidaFecha', $where['salidaFecha']);
-        if (isset($where['confirmada'])) $entradas = $entradas->where('confirmada', $where['confirmada'] ? 1 : 0);
+        if (isset($where['confirmada'])) {
+            if($where['confirmada'])$entradas = $entradas->where('confirmada', 1);
+            else $entradas = $entradas->where('confirmada', 0);
+        }
         $entradas = $entradas->orderBy('salidaFecha')
             ->orderBy('salidaHora')
             ->orderBy('llegadaFecha')
-            ->orderBy('llegadaHora');
+            ->orderBy('llegadaHora')
+            ->orderBy('confirmada');
         if (!$cuantas) {
             $entradas = $entradas->get();
         } elseif ($cuantas == 1) {
