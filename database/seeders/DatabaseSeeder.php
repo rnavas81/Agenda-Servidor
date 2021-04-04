@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
         $fin = new DateTime();
         $fin->add(new DateInterval('P2M'));
         while ($fecha < $fin) {
-            $max = rand(5, 20);
+            $max = rand(4, 7);
             for ($i = 0; $i <  $max; $i++) {
                 $init = rand(0, 23);
                 $fecha->setTime($init, 0, 0);
@@ -85,11 +85,15 @@ class DatabaseSeeder extends Seeder
                     'llegadaLugar' => $sitio,
                     'idCliente' => $cliente,
                     'clienteDetalle' => $clienteDetalle,
+                    'respuesta' => rand(1,4),
+                    'respuestaFecha' => $fecha->format('Y-m-d'),
+                    'respuestaDetalle' => $fak->sentence($nbWords = 6, $variableNbWords = true),
                     'confirmada' => 1
                 ]);
                 \App\Models\AvisoCoches::create([
                     'idAviso' => $entrada->id,
-                    'idCoche' => $coche
+                    'idCoche' => $coche,
+                    'presupuesto' => rand(1,5)*100
                 ]);
                 \App\Models\AvisoConductores::create([
                     'idAviso' => $entrada->id,
@@ -133,6 +137,7 @@ class DatabaseSeeder extends Seeder
                 $llegada->setTime($init, 0, 0);
                 $sitio = $fak->city;
                 $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
+                $respuesta = rand(0,4);
                 $entrada = \App\Models\Aviso::create([
                     'idUsuario' => $usuario,
                     'salidaFecha' => $fecha->format('Y-m-d'),
@@ -143,11 +148,14 @@ class DatabaseSeeder extends Seeder
                     'llegadaLugar' => $sitio,
                     'idCliente' => $cliente,
                     'clienteDetalle' => $fak->sentence($nbWords = 6, $variableNbWords = true),
-
+                    'respuesta' => $respuesta,
+                    'respuestaFecha' => $respuesta!=0?$fecha->format('Y-m-d'):null,
+                    'respuestaDetalle' => $fak->sentence($nbWords = 6, $variableNbWords = true),
                 ]);
                 \App\Models\AvisoCoches::create([
                     'idAviso' => $entrada->id,
-                    'idCoche' => $coche
+                    'idCoche' => $coche,
+                    'presupuesto' => rand(1,5)*100
                 ]);
                 \App\Models\AvisoConductores::create([
                     'idAviso' => $entrada->id,

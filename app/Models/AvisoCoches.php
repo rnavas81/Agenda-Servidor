@@ -17,7 +17,8 @@ class AvisoCoches extends Model
 
     protected $fillable = [
         'idAviso',
-        'idCoche'
+        'idCoche',
+        'presupuesto'
     ];
     protected $hidden = [
         'idAviso',

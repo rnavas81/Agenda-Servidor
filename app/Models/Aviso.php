@@ -19,9 +19,11 @@ class Aviso extends Model
         'llegadaLugar',
         'itinerario',
         'clienteDetalle',
-        'presupuesto',
+        'observaciones',
         'idCliente',
         'idUsuario',
+        'respuesta',
+        'respuestaDetalle'
     ];
     protected $hidden = [
         'idCliente',

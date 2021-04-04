@@ -21,14 +21,17 @@ class CreateavisoTable extends Migration
             $table->integer('idUsuario');
             $table->date('salidaFecha')->nullable();
             $table->time('salidaHora')->nullable();
-            $table->string('salidaLugar', 500)->nullable();
+            $table->string('salidaLugar', 500)->nullable()->default('');
             $table->date('llegadaFecha')->nullable();
             $table->time('llegadaHora')->nullable();
-            $table->string('llegadaLugar', 500)->nullable();
-            $table->string('itinerario', 1000)->nullable();
+            $table->string('llegadaLugar', 500)->nullable()->default('');
+            $table->string('itinerario', 1000)->nullable()->default('');
             $table->integer('idCliente')->nullable()->unsigned();
-            $table->string('clienteDetalle', 500)->nullable();
-            $table->float('presupuesto', 12, 3)->nullable();
+            $table->string('clienteDetalle', 500)->nullable()->default('');
+            $table->string('observaciones', 1000)->nullable();
+            $table->tinyInteger('respuesta')->default(0)->unsigned();
+            $table->date('respuestaFecha')->nullable();
+            $table->string('respuestaDetalle', 1000)->default('');
         });
     }
 

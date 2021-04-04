@@ -194,23 +194,23 @@ class Aviso extends Controller
      * Elimina los registros previos
      * Inserta los coches asignados
      */
-    public function addCoches($idAviso, $idsCoches)
+    public function addCoches($idAviso, $coches)
     {
         AvisoCoches::where('idAviso', $idAviso)->delete();
-        foreach ($idsCoches as $idCoche) {
-            if (!is_int($idCoche)) {
-                $coche = Coche::where('matricula', $idCoche)->first();
-                if ($coche) {
-                    $idCoche = $coche->id;
+        foreach ($coches as $coche) {
+            if (!is_int($coche[0])) {
+                $buscado = Coche::where('matricula', $coche[0])->first();
+                if ($buscado) {
+                    $coche = $buscado->id;
                 } else {
-                    $coche = Coche::create([
-                        'matricula' => $idCoche
+                    $nuevo = Coche::create([
+                        'matricula' => $coche[0]
                     ]);
-                    $idCoche = $coche->id;
+                    $coche[0] = $nuevo->id;
                 }
             }
             AvisoCoches::create([
-                'idAviso' => $idAviso, 'idCoche' => $idCoche
+                'idAviso' => $idAviso, 'idCoche' => $coche[0],'presupuesto'=>$coche[1]
             ]);
         }
     }
@@ -263,7 +263,10 @@ class Aviso extends Controller
             $data['idCliente'] = $request['cliente']['id'];
         }
         if (isset($request['clienteDetalle'])) $data['clienteDetalle'] = $request['clienteDetalle'];
-        if (isset($request['presupuesto'])) $data['presupuesto'] = $request['presupuesto'];
+        if (isset($request['observaciones'])) $data['observaciones'] = $request['observaciones'];
+        if (isset($request['respuesta'])) $data['respuesta'] = $request['respuesta'];
+        if (isset($request['respuestaFecha'])) $data['respuestaFecha'] = $request['respuestaFecha'];
+        if (isset($request['respuestaDetalle'])) $data['respuestaDetalle'] = $request['respuestaDetalle'];
         return $data;
     }
     /**

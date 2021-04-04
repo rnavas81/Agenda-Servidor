@@ -16,6 +16,7 @@ class CreateavisoCochesTable extends Migration
         Schema::create('aviso-coches', function (Blueprint $table) {
             $table->integer('idAviso');
             $table->integer('idCoche');
+            $table->float('presupuesto',9,2)->nullable();
         });
     }
 
