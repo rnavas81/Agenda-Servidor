@@ -174,7 +174,7 @@ class Aviso extends Controller
      */
     public function updateDB($id, $data)
     {
-        $update = ModelsAviso::where('id', $id)->where('habilitado', 1)->update($data);
+        $update = ModelsAviso::where('id', $id)->where('confirmada',0)->where('habilitado', 1)->update($data);
         if ($update == 1) {
             return $this->getDB(['id' => $id], 1);
         } else {
