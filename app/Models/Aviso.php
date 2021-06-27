@@ -44,8 +44,8 @@ class Aviso extends Model
     {
         return $this->hasMany(AvisoCoches::class, 'idAviso', 'id');
     }
-    public function conductores()
-    {
-        return $this->hasMany(AvisoConductores::class, 'idAviso', 'id');
-    }
+    // public function conductores()
+    // {
+    //     return $this->hasMany(AvisoConductores::class, 'idAviso', 'id');
+    // }
 }

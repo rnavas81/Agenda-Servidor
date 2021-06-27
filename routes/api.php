@@ -6,6 +6,7 @@ use App\Http\Controllers\Libro;
 use App\Http\Controllers\Cliente;
 use App\Http\Controllers\Coche;
 use App\Http\Controllers\Conductor;
+use App\Http\Controllers\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,7 @@ Route::get('/test', function (Request $request) {
     }
 });
 /******* ACCESO *******/
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');;
 
 Route::group([], function () {
     Route::group([
@@ -46,6 +47,14 @@ Route::group([], function () {
         Route::post('/test',function (Request $params){
             return response()->noContent(200);
         });
+        // Nueva usuario
+        Route::post('/user', [Users::class, 'insert']);
+        // Actualiza un usuario
+        Route::put('/user', [Users::class, 'update']);
+        // Actualiza un usuario
+        Route::put('/user/{id}', [Users::class, 'update']);
+        // Elimina un usuario
+        Route::delete('/user/{id}', [Users::class, 'delete']);
 
         /******* AGENDA *******/
         // Recupera los datos del aviso

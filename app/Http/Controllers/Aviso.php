@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Libro as ControllersLibro;
 use App\Models\Aviso as ModelsAviso;
 use App\Models\AvisoCoches;
 use App\Models\AvisoConductores;
@@ -62,8 +63,8 @@ class Aviso extends Controller
             if ($nuevo) {
                 $coches = isset($request['coches']) ? $request['coches'] : [];
                 $this->addCoches($nuevo->id, $coches);
-                $conductores = isset($request['conductores']) ? $request['conductores'] : [];
-                $this->addConductores($nuevo->id, $conductores);
+                // $conductores = isset($request['conductores']) ? $request['conductores'] : [];
+                // $this->addConductores($nuevo->id, $conductores);
                 DB::commit();
                 return response()->json($nuevo, 201);
             } else {
@@ -83,8 +84,8 @@ class Aviso extends Controller
             if ($entrada) {
                 $coches = isset($request['coches']) ? $request['coches'] : [];
                 $this->addCoches($entrada->id, $coches);
-                $conductores = isset($request['conductores']) ? $request['conductores'] : [];
-                $this->addConductores($entrada->id, $conductores);
+                // $conductores = isset($request['conductores']) ? $request['conductores'] : [];
+                // $this->addConductores($entrada->id, $conductores);
                 DB::commit();
                 return response()->json($entrada, 201);
             } else {
@@ -111,29 +112,35 @@ class Aviso extends Controller
      */
     public function confirm(Request $request, $id)
     {
-        // Actualiza los datos de la entrada
-        $entrada = $this->updateDB($id, ['confirmada' => 1]);
-        if ($entrada) {
-            try {
-                $data = $entrada->toArray();
-                $extra = $this->toValidArray($data);
-                $data["idUsuario"] = $request->user()->id;
-                DB::beginTransaction();
-                $nuevo = app(Libro::class)->insertDB($data);
-                if ($nuevo) {
-                    app(Libro::class)->addCoches($nuevo->id, $extra["coches"]);
-                    app(Libro::class)->addConductores($nuevo->id, $extra["conductores"]);
-                    DB::commit();
-                    return response()->json($nuevo, 201);
+        DB::beginTransaction();
+        try {
+            // Actualiza los datos de la entrada
+            $entrada = $this->updateDB($id, ['confirmada' => 1]);
+            $coches = isset($request['coches']) ? $request['coches'] : [];
+            if ($entrada) {
+                $entrada = $entrada->toArray();
+                $entrada["idUsuario"] = $request->user()->id;
+                $data = $this->toValidArray($entrada);
+                if (count($coches) > 0) {
+                    foreach ($coches as $coche) {
+                        $data['observaciones'] = (strlen($data['observaciones']) > 0 ? "\n" : "") . $coche['coche'];
+                        $data['importe'] = $coche['presupuesto'];
+                        $nuevo = app(ControllersLibro::class)->insertDB($data);
+                        if (!$nuevo)
+                            throw new Exception("Error al crear nueva entrada en el libro", 1);
+                    }
                 } else {
-                    throw new Exception("Error al crear nueva entrada en el libro", 1);
+                    $nuevo = app(ControllersLibro::class)->insertDB($data);
+                    if (!$nuevo) throw new Exception("Error al crear nueva entrada en el libro", 1);
                 }
-            } catch (\Throwable $th) {
-                DB::rollBack();
-                return response()->noContent(406);
+                DB::commit();
+                return response()->json($entrada, 201);
+            } else {
+                return response()->noContent(204);
             }
-        } else {
-            return response()->noContent(204);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->noContent(406);
         }
     }
     /**
@@ -142,11 +149,11 @@ class Aviso extends Controller
      */
     public function getDB($where = [], $cuantas = false)
     {
-        $entradas = ModelsAviso::with('usuario', 'cliente', 'coches.coche', 'conductores.conductor')->where('habilitado', 1);
+        $entradas = ModelsAviso::with('usuario', 'cliente', 'coches')->where('habilitado', 1);
         if (isset($where['id'])) $entradas = $entradas->where('id', $where['id']);
         if (isset($where['salidaFecha'])) $entradas = $entradas->where('salidaFecha', $where['salidaFecha']);
         if (isset($where['confirmada'])) {
-            if($where['confirmada'])$entradas = $entradas->where('confirmada', 1);
+            if ($where['confirmada']) $entradas = $entradas->where('confirmada', 1);
             else $entradas = $entradas->where('confirmada', 0);
         }
         $entradas = $entradas->orderBy('salidaFecha')
@@ -174,7 +181,7 @@ class Aviso extends Controller
      */
     public function updateDB($id, $data)
     {
-        $update = ModelsAviso::where('id', $id)->where('confirmada',0)->where('habilitado', 1)->update($data);
+        $update = ModelsAviso::where('id', $id)->where('confirmada', 0)->where('habilitado', 1)->update($data);
         if ($update == 1) {
             return $this->getDB(['id' => $id], 1);
         } else {
@@ -198,46 +205,11 @@ class Aviso extends Controller
     {
         AvisoCoches::where('idAviso', $idAviso)->delete();
         foreach ($coches as $coche) {
-            if (!is_int($coche[0])) {
-                $buscado = Coche::where('matricula', $coche[0])->first();
-                if ($buscado) {
-                    $coche = $buscado->id;
-                } else {
-                    $nuevo = Coche::create([
-                        'matricula' => $coche[0]
-                    ]);
-                    $coche[0] = $nuevo->id;
-                }
-            }
-            AvisoCoches::create([
-                'idAviso' => $idAviso, 'idCoche' => $coche[0],'presupuesto'=>$coche[1]
-            ]);
+            $coche['idAviso'] = $idAviso;
+            AvisoCoches::create($coche);
         }
     }
-    /**
-     * Elimina los registros previos
-     * Inserta los conductores asignados
-     */
-    public function addConductores($idAviso, $idsConductores)
-    {
-        AvisoConductores::where('idAviso', $idAviso)->delete();
-        foreach ($idsConductores as $idConductor) {
-            if (!is_int($idConductor)) {
-                $conductor = Conductor::where('nombre', $idConductor)->first();
-                if ($conductor) {
-                    $idConductor = $conductor->id;
-                } else {
-                    $conductor = Conductor::create([
-                        'nombre' => $idConductor
-                    ]);
-                    $idConductor = $conductor->id;
-                }
-            }
-            AvisoConductores::create([
-                'idAviso' => $idAviso, 'idConductor' => $idConductor
-            ]);
-        }
-    }
+
     /**
      * Recupera los datos enviados
      */
@@ -272,20 +244,20 @@ class Aviso extends Controller
     /**
      * Formatea el array con los campos validdos
      */
-    public function toValidArray(&$data)
+    public function toValidArray($data)
     {
         $data['idAviso'] = $data["id"];
         if (isset($data['cliente'])) $data['idCliente'] = $data['cliente']['id'];
-        $extra = [
-            "coches" => [], "conductores" => []
-        ];
-        foreach ($data['coches'] as $coche) {
-            $extra["coches"][] = $coche["coche"]['id'];
-        }
-        foreach ($data['conductores'] as $conductor) {
-            $extra["conductores"][] = $conductor["conductor"]['id'];
-        }
+        // $extra = [
+        //     "coches" => [], "conductores" => []
+        // ];
+        // foreach ($data['coches'] as $coche) {
+        //     $extra["coches"][] = $coche["coche"]['id'];
+        // }
+        // foreach ($data['conductores'] as $conductor) {
+        //     $extra["conductores"][] = $conductor["conductor"]['id'];
+        // }
         unset($data["id"], $data['cliente'], $data['usuario'], $data["conductores"], $data["coches"]);
-        return $extra;
+        return $data;
     }
 }

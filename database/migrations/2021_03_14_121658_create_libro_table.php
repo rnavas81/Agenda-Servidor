@@ -40,6 +40,8 @@ class CreateLibroTable extends Migration
             $table->string('gastos', 500)->nullable();
             $table->string('facturaNombre', 500)->nullable();
             $table->integer('facturaNumero')->nullable();
+            $table->string('observaciones', 1000)->nullable();
+
         });
     }
 

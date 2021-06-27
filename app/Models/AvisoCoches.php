@@ -21,15 +21,14 @@ class AvisoCoches extends Model
         'presupuesto'
     ];
     protected $hidden = [
-        'idAviso',
-        'idCoche'
+        'idAviso'
     ];
     public function aviso()
     {
         return $this->hasOne(AvisoEntrada::class, 'idAviso', 'id');
     }
-    public function coche()
-    {
-        return $this->belongsTo(Coche::class, 'idCoche', 'id');
-    }
+    // public function coche()
+    // {
+    //     return $this->belongsTo(Coche::class, 'idCoche', 'id');
+    // }
 }
