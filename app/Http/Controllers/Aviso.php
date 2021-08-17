@@ -71,6 +71,7 @@ class Aviso extends Controller
                 throw new Exception("Error al crear nuevo aviso", 1);
             }
         } catch (\Throwable $th) {
+            dd($th);
             DB::rollBack();
             return response()->noContent(406);
         }
@@ -225,14 +226,17 @@ class Aviso extends Controller
         if (isset($request['itinerario'])) $data['itinerario'] = $request['itinerario'];
         if (isset($request['idCliente'])) $data['idCliente'] = $request['idCliente'];
         if (isset($request['cliente'])) {
-            $cliente = Cliente::where('id', $request['cliente']['id'])->first();
-            if (!$cliente) {
-                $cliente = Cliente::create([
-                    'nombre' => $request['cliente']['nombre'],
-                    'telefono' => $request['cliente']['telefono']
-                ]);
+            if($request['cliente']==null)$data['idCliente']=null;
+            else {
+                $cliente = Cliente::where('id', $request['cliente']['id'])->first();
+                if (!$cliente) {
+                    $cliente = Cliente::create([
+                        'nombre' => $request['cliente']['nombre'],
+                        'telefono' => $request['cliente']['telefono']
+                    ]);
+                }
+                $data['idCliente'] = $cliente['id'];
             }
-            $data['idCliente'] = $request['cliente']['id'];
         }
         if (isset($request['clienteDetalle'])) $data['clienteDetalle'] = $request['clienteDetalle'];
         if (isset($request['observaciones'])) $data['observaciones'] = $request['observaciones'];

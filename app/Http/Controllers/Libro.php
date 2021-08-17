@@ -215,17 +215,21 @@ class Libro extends Controller
         if (isset($request['itinerario'])) $data['itinerario'] = $request['itinerario'];
         if (isset($request['kms'])) $data['kms'] = $request['kms'];
         if (isset($request['cliente'])) {
-            $cliente = Cliente::where('id', $request['cliente']['id'])->first();
-            if (!$cliente) {
-                $cliente = Cliente::create([
-                    'nombre' => $request['cliente']['nombre'],
-                    'telefono' => $request['cliente']['telefono']
-                ]);
+            if($request['cliente']==null)$data['idCliente']=null;
+            else {
+                $cliente = Cliente::where('id', $request['cliente']['id'])->first();
+                if (!$cliente) {
+                    $cliente = Cliente::create([
+                        'nombre' => $request['cliente']['nombre'],
+                        'telefono' => $request['cliente']['telefono']
+                    ]);
+                }
+                $data['idCliente'] = $cliente['id'];
             }
-            $data['idCliente'] = $request['cliente']['id'];
         }
         if (isset($request['idCliente'])) $data['idCliente'] = $request['idCliente'];
         if (isset($request['clienteDetalle'])) $data['clienteDetalle'] = $request['clienteDetalle'];
+        if (isset($request['observaciones'])) $data['observaciones'] = $request['observaciones'];
         if (isset($request['facturarA'])) $data['facturarA'] = $request['facturarA'];
         if (isset($request['contacto'])) $data['contacto'] = $request['contacto'];
         if (isset($request['contactoTlf'])) $data['contactoTlf'] = $request['contactoTlf'];
