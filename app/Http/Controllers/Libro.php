@@ -235,7 +235,7 @@ class Libro extends Controller
         if (isset($request['contactoTlf'])) $data['contactoTlf'] = $request['contactoTlf'];
         if (isset($request['importe'])) $data['importe'] = $request['importe'];
         if (isset($request['presupuesto'])) $data['importe'] = $request['presupuesto'];
-        if (isset($request['cobrado']) && !empty($request['cobrado'])) $data['cobrado'] = $request['cobrado'];
+        if (isset($request['cobrado'])) $data['cobrado'] = $request['cobrado'];
         if (isset($request['cobradoFecha'])) $data['cobradoFecha'] = $request['cobradoFecha'];
         if (isset($request['cobradoForma'])) $data['cobradoForma'] = $request['cobradoForma'];
         if (isset($request['cobradoDetalle'])) $data['cobradoDetalle'] = $request['cobradoDetalle'];
