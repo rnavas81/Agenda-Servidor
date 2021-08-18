@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAgendaConductoresTable extends Migration
+class CreateavisoConductoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class CreateAgendaConductoresTable extends Migration
      */
     public function up()
     {
-        Schema::create('agenda-conductores', function (Blueprint $table) {
-            $table->integer('idAgenda');
+        Schema::create('aviso-conductores', function (Blueprint $table) {
+            $table->integer('idAviso');
             $table->integer('idConductor');
         });
     }
@@ -26,6 +26,6 @@ class CreateAgendaConductoresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agenda-conductores');
+        Schema::dropIfExists('aviso-conductores');
     }
 }

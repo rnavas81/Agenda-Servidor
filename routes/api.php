@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\Agenda;
+use App\Http\Controllers\Aviso;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Libro;
 use App\Http\Controllers\Cliente;
 use App\Http\Controllers\Coche;
 use App\Http\Controllers\Conductor;
+use App\Http\Controllers\Users;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
@@ -34,7 +35,7 @@ Route::get('/test', function (Request $request) {
     }
 });
 /******* ACCESO *******/
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1');;
 
 Route::group([], function () {
     Route::group([
@@ -46,24 +47,32 @@ Route::group([], function () {
         Route::post('/test',function (Request $params){
             return response()->noContent(200);
         });
+        // Nueva usuario
+        Route::post('/user', [Users::class, 'insert']);
+        // Actualiza un usuario
+        Route::put('/user', [Users::class, 'update']);
+        // Actualiza un usuario
+        Route::put('/user/{id}', [Users::class, 'update']);
+        // Elimina un usuario
+        Route::delete('/user/{id}', [Users::class, 'delete']);
 
         /******* AGENDA *******/
-        // Recupera los datos de la agenda
-        Route::get('/agenda', [Agenda::class, 'getAll']);
-        // Recupera los datos de una entrada de la agenda
-        Route::get('/agenda/{id}', [Agenda::class, 'get']);
-        // Busca las entradas de la agenda en una fecha
-        Route::get('/agenda/entradas/{fecha}', [Agenda::class, 'getByFecha']);
+        // Recupera los datos del aviso
+        Route::get('/aviso', [Aviso::class, 'getAll']);
+        // Recupera los datos de una entrada del aviso
+        Route::get('/aviso/{id}', [Aviso::class, 'get']);
+        // Busca las entradas del aviso en una fecha
+        Route::get('/aviso/entradas/{fecha}', [Aviso::class, 'getByFecha']);
         // Busca las entradas de una semana
-        Route::get('/agenda/semana/{fecha}', [Agenda::class, 'getSemana']);
-        // Nueva entrada de agenda
-        Route::post('/agenda', [Agenda::class, 'insert']);
-        // Actualiza una entrada de agenda
-        Route::put('/agenda/{id}', [Agenda::class, 'update']);
-        // Elimina una entrada de agenda
-        Route::delete('/agenda/{id}', [Agenda::class, 'delete']);
-        // Confirma una entrada de agenda
-        Route::put('/agenda/confirmar/{id}', [Agenda::class, 'confirm']);
+        Route::get('/aviso/semana/{fecha}', [Aviso::class, 'getSemana']);
+        // Nueva entrada de aviso
+        Route::post('/aviso', [Aviso::class, 'insert']);
+        // Actualiza una entrada de aviso
+        Route::put('/aviso/{id}', [Aviso::class, 'update']);
+        // Elimina una entrada de aviso
+        Route::delete('/aviso/{id}', [Aviso::class, 'delete']);
+        // Confirma una entrada de aviso
+        Route::put('/aviso/confirmar/{id}', [Aviso::class, 'confirm']);
 
         /******* COCHES *******/
         // Recupera los coches

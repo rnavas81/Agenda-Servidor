@@ -10,6 +10,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         // TODO: Controlar el numero de intentos de acceso desde una ip
+
         $loginData = $request->validate([
             'username' => 'required',
             'password' => 'required'

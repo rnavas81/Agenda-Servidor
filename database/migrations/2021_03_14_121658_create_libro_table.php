@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLibroEntradasTable extends Migration
+class CreateLibroTable extends Migration
 {
     /**
      * Run the migrations.
@@ -18,7 +18,7 @@ class CreateLibroEntradasTable extends Migration
             $table->timestamps();
             $table->tinyInteger('habilitado')->default(1);
             $table->integer('idUsuario');
-            $table->integer('idAgenda')->nullable();
+            $table->integer('idAviso')->nullable();
             $table->date('salidaFecha')->nullable();
             $table->time('salidaHora')->nullable();
             $table->string('salidaLugar', 500)->nullable();
@@ -40,6 +40,8 @@ class CreateLibroEntradasTable extends Migration
             $table->string('gastos', 500)->nullable();
             $table->string('facturaNombre', 500)->nullable();
             $table->integer('facturaNumero')->nullable();
+            $table->string('observaciones', 1000)->nullable();
+
         });
     }
 

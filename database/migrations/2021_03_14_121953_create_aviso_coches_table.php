@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAgendaCochesTable extends Migration
+class CreateavisoCochesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateAgendaCochesTable extends Migration
      */
     public function up()
     {
-        Schema::create('agenda-coches', function (Blueprint $table) {
-            $table->integer('idAgenda');
+        Schema::create('aviso-coches', function (Blueprint $table) {
+            $table->integer('idAviso');
             $table->integer('idCoche');
+            $table->float('presupuesto',9,2)->nullable();
         });
     }
 
@@ -26,6 +27,6 @@ class CreateAgendaCochesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('agenda-coches');
+        Schema::dropIfExists('aviso-coches');
     }
 }
