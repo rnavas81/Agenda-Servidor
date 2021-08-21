@@ -29,7 +29,7 @@ class CreateavisoTable extends Migration
             $table->integer('idCliente')->nullable()->unsigned();
             $table->string('clienteDetalle', 500)->nullable()->default('');
             $table->string('observaciones', 1000)->nullable();
-            $table->tinyInteger('respuesta')->default(0)->unsigned();
+            $table->tinyInteger('respuesta')->nullable()->unsigned();
             $table->date('respuestaFecha')->nullable();
             $table->string('respuestaDetalle', 1000)->nullable();
         });
