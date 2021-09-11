@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Aviso;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Buscar;
 use App\Http\Controllers\Libro;
 use App\Http\Controllers\Cliente;
 use App\Http\Controllers\Coche;
@@ -129,5 +130,8 @@ Route::group([], function () {
         Route::put('/libro/{id}', [Libro::class, 'update']);
         // Elimina una entrada de libro
         Route::delete('/libro/{id}', [Libro::class, 'delete']);
+
+        /******* BUSCAR *******/
+        Route::post('/buscar', [Buscar::class, 'get']);
     });
 });
