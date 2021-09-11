@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Aviso;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Buscar;
 use App\Http\Controllers\Libro;
 use App\Http\Controllers\Cliente;
 use App\Http\Controllers\Coche;
@@ -44,9 +45,13 @@ Route::group([], function () {
 
         /******* USUARIOS *******/
         Route::post('/logout', [AuthController::class, 'logout']);
-        Route::post('/test',function (Request $params){
+        Route::post('/test', function (Request $params) {
             return response()->noContent(200);
         });
+        // Recupera los usuarios
+        Route::get('/users', [Users::class, 'getAll']);
+        // Recuperar un usuario
+        Route::get('/user/{id}', [Users::class, 'get']);
         // Nueva usuario
         Route::post('/user', [Users::class, 'insert']);
         // Actualiza un usuario
@@ -126,5 +131,7 @@ Route::group([], function () {
         // Elimina una entrada de libro
         Route::delete('/libro/{id}', [Libro::class, 'delete']);
 
+        /******* BUSCAR *******/
+        Route::post('/buscar', [Buscar::class, 'get']);
     });
 });

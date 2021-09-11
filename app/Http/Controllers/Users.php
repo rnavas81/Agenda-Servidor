@@ -9,14 +9,24 @@ use Illuminate\Support\Facades\DB;
 
 class Users extends Controller
 {
+    public function getAll()
+    {
+        $entradas = $this->getDB();
+        return response()->json($entradas, 200);
+    }
+
+    public function get(Request $request, $id = null)
+    {
+        $entradas = $this->getDB(['id'=>$id],1);
+        return response()->json($entradas, 200);
+    }
+
     public function insert(Request $request)
     {
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
-            'lastName'  => ['string', 'max:255'],
             'email'    => ['required', 'email', 'unique:users', 'max:255'],
             'password' => ['required', 'string', 'min:8', 'max:32'],
-            'contact' => ['string', 'max:32']
         ]);
         try {
             $data = $this->getRequestData($request);
@@ -33,6 +43,7 @@ class Users extends Controller
             }
         } catch (\Throwable $th) {
             DB::rollBack();
+            dd($th);
             return response()->noContent(406);
         }
     }
@@ -40,7 +51,6 @@ class Users extends Controller
     {
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
-            'lastName'  => ['string', 'max:255'],
             'email'    => ['required', 'email', 'max:255'],
             'password' => ['string', 'min:8', 'max:32'],
         ]);
@@ -126,9 +136,10 @@ class Users extends Controller
      */
     public function deleteDB($id)
     {
-        return User::where('id', $id)->update([
-            'activated' => 0
-        ]) == 1;
+        // return User::where('id', $id)->update([
+        //     'activated' => 0
+        // ]) == 1;
+        return User::where('id', $id)->delete();
     }
     /** FUNCIONES EXTRA */
 
@@ -141,6 +152,7 @@ class Users extends Controller
         if (isset($request['name'])) $data['name'] = $request['name'];
         if (isset($request['lastName'])) $data['lastName'] = $request['lastName'];
         if (isset($request['email'])) $data['email'] = $request['email'];
+        if (isset($request['username'])) $data['username'] = $request['username'];
         if (isset($request['password'])) $data['password'] = bcrypt($request['password']);
 
         return $data;
