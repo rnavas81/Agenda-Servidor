@@ -124,7 +124,8 @@ class DatabaseSeeder extends Seeder
                             'llegadaLugar' => $sitio,
                             'idCliente' => $cliente,
                             'clienteDetalle' => $clienteDetalle,
-                            'importe' => $presupuesto
+                            'importe' => $presupuesto,
+                            'facturarA' => rand(1, 10),
                         ]);
 
                         \App\Models\LibroCoches::create([

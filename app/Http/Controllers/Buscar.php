@@ -39,7 +39,7 @@ class Buscar extends Controller
                 if ($request['cliente'] > 0) $avisos = $avisos->where('idCliente', $request['cliente']);
                 $avisos = $avisos->get()->toArray();
                 foreach ($avisos as $key => $record) {
-                    $avisos[$key]['tipo']=1;
+                    $avisos[$key]['tipo'] = 1;
                 }
             }
             //Si el tipo es 0 0 2 recupera los viajes
@@ -49,20 +49,23 @@ class Buscar extends Controller
                 if (!empty($request['hasta'])) $viajes = $viajes->whereDate('salidaFecha', '<=', $request['hasta']);
                 if (!empty($request['salida'])) $viajes = $viajes->where('salidaLugar', 'LIKE', "%$request[salida]%");
                 if (!empty($request['llegada'])) $viajes = $viajes->where('llegadaLugar', 'LIKE', "%$request[llegada]%");
-                if (array_key_exists('cobrado',$request) && $request['cobrado']>-1) $viajes = $viajes->where('cobrado',$request['cobrado']);
-                if (!empty($request['facturaNumero']) && $request['facturaNumero']===true) $viajes = $viajes->where('facturaNumero',$request['facturaNumero']);
+                if (array_key_exists('cobrado', $request) && $request['cobrado'] > -1) $viajes = $viajes->where('cobrado', $request['cobrado']);
+                if (!empty($request['facturaNumero'])) $viajes = $viajes->where('facturaNumero', 'LIKE', "%$request[facturaNumero]$");
+                if (!empty($request['facturarA'])) $viajes = $viajes->where('facturarA', $request['facturarA']);
 
                 if ($request['cliente'] > 0) $viajes = $viajes->where('idCliente', $request['cliente']);
                 $viajes = $viajes->get()->toArray();
                 foreach ($viajes as $key => $record) {
-                    $viajes[$key]['tipo']=2;
+                    $viajes[$key]['tipo'] = 2;
                 }
             }
             switch ($request['tipo']) {
                 case 0:
                     // $data = $avisos->mergeRecursive($viajes)->sortBy('salidaFecha');
-                    $data = array_merge($avisos,$viajes);
-                    usort($data, function($a, $b) {return strcmp($a["salidaFecha"], $b["salidaFecha"]);});
+                    $data = array_merge($avisos, $viajes);
+                    usort($data, function ($a, $b) {
+                        return strcmp($a["salidaFecha"], $b["salidaFecha"]);
+                    });
 
                     break;
                 case 1:
@@ -81,7 +84,8 @@ class Buscar extends Controller
             return response()->noContent(406);
         }
     }
-    function cmp($a, $b) {
+    function cmp($a, $b)
+    {
         return strcmp($a->name, $b->name);
     }
 }

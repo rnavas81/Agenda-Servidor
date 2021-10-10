@@ -51,6 +51,10 @@ class Libro extends Model
     {
         return $this->hasOne(User::class, 'id', 'idUsuario');
     }
+    public function facturarA()
+    {
+        return $this->hasOne(User::class, 'id', 'facturarA');
+    }
     public function cliente()
     {
         return $this->hasOne(Cliente::class, 'id', 'idCliente');
