@@ -51,7 +51,7 @@ class Buscar extends Controller
                 if (!empty($request['llegada'])) $viajes = $viajes->where('llegadaLugar', 'LIKE', "%$request[llegada]%");
                 if (array_key_exists('cobrado', $request) && $request['cobrado'] > -1) $viajes = $viajes->where('cobrado', $request['cobrado']);
                 if (!empty($request['facturaNumero'])) $viajes = $viajes->where('facturaNumero', 'LIKE', "%$request[facturaNumero]$");
-                if (!empty($request['facturarA'])) $viajes = $viajes->where('facturarA', 'LIKE', "%$request[facturarA]%");
+                if (!empty($request['facturarA'])) $viajes = $viajes->where('facturarA', $request['facturarA']);
 
                 if ($request['cliente'] > 0) $viajes = $viajes->where('idCliente', $request['cliente']);
                 $viajes = $viajes->get()->toArray();
