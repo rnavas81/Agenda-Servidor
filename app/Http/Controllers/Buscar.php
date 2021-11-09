@@ -33,10 +33,10 @@ class Buscar extends Controller
             $clientes = null;
             // Recupera los clientes
             if (!empty($request['cliente'])) {
+                $clientes=[0];
                 $request['cliente']=strtolower($request['cliente']);
                 $result = Cliente::whereRaw('upper(nombre) like (?)',["%{$request["cliente"]}%"])->get();
                 if($result && count($result)>0){
-                    $clientes=[];
                     foreach ($result as $cliente) {
                         $clientes[]=$cliente->id;
                     }
@@ -59,7 +59,7 @@ class Buscar extends Controller
             if ($request['tipo'] == 0 || $request['tipo'] == 2) {
                 $facturarA=null;
                 if (!empty($request['facturarA'])) {
-                    $facturarA=[];
+                    $facturarA=[0];
                     $request['facturarA']=strtolower($request['facturarA']);
                     $result = Cliente::whereRaw('upper(nombre) like (?)',["%{$request["facturarA"]}%"])->get();
                     if($result && count($result)>0){
