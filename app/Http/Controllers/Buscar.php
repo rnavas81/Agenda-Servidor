@@ -33,19 +33,19 @@ class Buscar extends Controller
             $clientes = null;
             // Recupera los clientes
             if (!empty($request['cliente'])) {
-                $clientes=[0];
-                $request['cliente']=strtolower($request['cliente']);
-                $result = Cliente::whereRaw('upper(nombre) like (?)',["%{$request["cliente"]}%"])->get();
-                if($result && count($result)>0){
+                $clientes = [0];
+                $request['cliente'] = strtolower($request['cliente']);
+                $result = Cliente::whereRaw("LOWER (nombre) LIKE ?", ["%" . $request["cliente"] . "%"])->get();
+                if ($result && count($result) > 0) {
                     foreach ($result as $cliente) {
-                        $clientes[]=$cliente->id;
+                        $clientes[] = $cliente->id;
                     }
                 }
             }
             //Si el tipo es 0 o 1 recupera los avisos
             if ($request['tipo'] == 0 || $request['tipo'] == 1) {
                 $avisos = Aviso::with('cliente')->where('habilitado', 1);
-                if($clientes)$avisos=$avisos->whereIn('idCliente',$clientes);
+                if ($clientes) $avisos = $avisos->whereIn('idCliente', $clientes);
                 if (!empty($request['desde'])) $avisos = $avisos->whereDate('salidaFecha', '>=', $request['desde']);
                 if (!empty($request['hasta'])) $avisos = $avisos->whereDate('salidaFecha', '<=', $request['hasta']);
                 if (!empty($request['salida'])) $avisos = $avisos->where('salidaLugar', 'LIKE', "%$request[salida]%");
@@ -57,20 +57,20 @@ class Buscar extends Controller
             }
             //Si el tipo es 0 0 2 recupera los viajes
             if ($request['tipo'] == 0 || $request['tipo'] == 2) {
-                $facturarA=null;
+                $facturarA = null;
                 if (!empty($request['facturarA'])) {
-                    $facturarA=[0];
-                    $request['facturarA']=strtolower($request['facturarA']);
-                    $result = Cliente::whereRaw('upper(nombre) like (?)',["%{$request["facturarA"]}%"])->get();
-                    if($result && count($result)>0){
+                    $facturarA = [0];
+                    $request['facturarA'] = strtolower($request['facturarA']);
+                    $result = Cliente::whereRaw("LOWER (nombre) LIKE ?", ["%" . $request["facturarA"] . "%"])->get();
+                    if ($result && count($result) > 0) {
                         foreach ($result as $item) {
-                            $facturarA[]=$item->id;
+                            $facturarA[] = $item->id;
                         }
                     }
                 }
                 $viajes = Libro::with('cliente')->where('habilitado', 1);
-                if($clientes)$viajes=$viajes->whereIn('idCliente',$clientes);
-                if($facturarA)$viajes=$viajes->whereIn('facturarA',$facturarA);
+                if ($clientes) $viajes = $viajes->whereIn('idCliente', $clientes);
+                if ($facturarA) $viajes = $viajes->whereIn('facturarA', $facturarA);
                 if (!empty($request['desde'])) $viajes = $viajes->whereDate('salidaFecha', '>=', $request['desde']);
                 if (!empty($request['hasta'])) $viajes = $viajes->whereDate('salidaFecha', '<=', $request['hasta']);
                 if (!empty($request['salida'])) $viajes = $viajes->where('salidaLugar', 'LIKE', "%$request[salida]%");
