@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Aviso;
+use App\Models\Cliente;
 use App\Models\Libro;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -29,14 +30,26 @@ class Buscar extends Controller
             $data = [];
             $avisos = [];
             $viajes = [];
+            $clientes = null;
+            // Recupera los clientes
+            if (!empty($request['cliente'])) {
+                $clientes = [0];
+                $request['cliente'] = strtolower($request['cliente']);
+                $result = Cliente::whereRaw("LOWER (nombre) LIKE ?", ["%" . $request["cliente"] . "%"])->get();
+                if ($result && count($result) > 0) {
+                    foreach ($result as $cliente) {
+                        $clientes[] = $cliente->id;
+                    }
+                }
+            }
             //Si el tipo es 0 o 1 recupera los avisos
             if ($request['tipo'] == 0 || $request['tipo'] == 1) {
                 $avisos = Aviso::with('cliente')->where('habilitado', 1);
+                if ($clientes) $avisos = $avisos->whereIn('idCliente', $clientes);
                 if (!empty($request['desde'])) $avisos = $avisos->whereDate('salidaFecha', '>=', $request['desde']);
                 if (!empty($request['hasta'])) $avisos = $avisos->whereDate('salidaFecha', '<=', $request['hasta']);
                 if (!empty($request['salida'])) $avisos = $avisos->where('salidaLugar', 'LIKE', "%$request[salida]%");
                 if (!empty($request['llegada'])) $avisos = $avisos->where('llegadaLugar', 'LIKE', "%$request[llegada]%");
-                if ($request['cliente'] > 0) $avisos = $avisos->where('idCliente', $request['cliente']);
                 $avisos = $avisos->get()->toArray();
                 foreach ($avisos as $key => $record) {
                     $avisos[$key]['tipo'] = 1;
@@ -44,16 +57,28 @@ class Buscar extends Controller
             }
             //Si el tipo es 0 0 2 recupera los viajes
             if ($request['tipo'] == 0 || $request['tipo'] == 2) {
+                $facturarA = null;
+                if (!empty($request['facturarA'])) {
+                    $facturarA = [0];
+                    $request['facturarA'] = strtolower($request['facturarA']);
+                    $result = Cliente::whereRaw("LOWER (nombre) LIKE ?", ["%" . $request["facturarA"] . "%"])->get();
+                    if ($result && count($result) > 0) {
+                        foreach ($result as $item) {
+                            $facturarA[] = $item->id;
+                        }
+                    }
+                }
                 $viajes = Libro::with('cliente')->where('habilitado', 1);
+                if ($clientes) $viajes = $viajes->whereIn('idCliente', $clientes);
+                if ($facturarA) $viajes = $viajes->whereIn('facturarA', $facturarA);
                 if (!empty($request['desde'])) $viajes = $viajes->whereDate('salidaFecha', '>=', $request['desde']);
                 if (!empty($request['hasta'])) $viajes = $viajes->whereDate('salidaFecha', '<=', $request['hasta']);
                 if (!empty($request['salida'])) $viajes = $viajes->where('salidaLugar', 'LIKE', "%$request[salida]%");
                 if (!empty($request['llegada'])) $viajes = $viajes->where('llegadaLugar', 'LIKE', "%$request[llegada]%");
                 if (array_key_exists('cobrado', $request) && $request['cobrado'] > -1) $viajes = $viajes->where('cobrado', $request['cobrado']);
                 if (!empty($request['facturaNumero'])) $viajes = $viajes->where('facturaNumero', 'LIKE', "%$request[facturaNumero]$");
-                if (!empty($request['facturarA'])) $viajes = $viajes->where('facturarA', $request['facturarA']);
-
-                if ($request['cliente'] > 0) $viajes = $viajes->where('idCliente', $request['cliente']);
+                // if (!empty($request['facturarA'])) $viajes = $viajes->where('facturarA', $request['facturarA']);
+                // if ($request['cliente'] > 0) $viajes = $viajes->where('idCliente', $request['cliente']);
                 $viajes = $viajes->get()->toArray();
                 foreach ($viajes as $key => $record) {
                     $viajes[$key]['tipo'] = 2;
