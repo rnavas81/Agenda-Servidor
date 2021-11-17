@@ -35,13 +35,15 @@ class Libro extends Model
         'gastos',
         'facturaNombre',
         'facturaNumero',
-        'observaciones'
+        'observaciones',
+        'idMigracion'
     ];
     protected $hidden = [
         'idCliente',
         'idUsuario',
         'updated_at',
-        'habilitado'
+        'habilitado',
+        'idMigracion',
     ];
     public function aviso()
     {

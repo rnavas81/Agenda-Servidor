@@ -39,7 +39,7 @@ class CreateLibroTable extends Migration
             $table->string('cobradoDetalle', 500)->nullable();
             $table->string('gastos', 1000)->nullable();
             $table->integer('facturarA')->nullable()->unsigned();
-            // $table->string('facturaNombre', 500)->nullable();
+            $table->string('facturaNombre', 500)->nullable();
             $table->integer('facturaNumero')->nullable();
 
         });

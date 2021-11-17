@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
                 'email' => $fak->email,
                 'email_verified_at' => now(),
             ]);
+            return;
             for ($i = 0; $i < 5; $i++) {
                 \App\Models\User::create([
                     'name' => $fak->firstName,
