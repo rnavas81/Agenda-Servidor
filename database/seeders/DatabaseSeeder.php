@@ -96,10 +96,10 @@ class DatabaseSeeder extends Seeder
                 $max = rand(0, 3);
                 for ($i = 0; $i <  $max; $i++) {
                     $init = rand(0, 23);
-                    $fecha->setTime($init, 0, 0);
+                    $inicio->setTime($init, 0, 0);
                     $usuario = $usuarios[rand(0, count($usuarios) - 1)];
                     $cliente = $clientes[rand(0, count($clientes) - 1)];
-                    $llegada = new DateTime($fecha->format("Y-m-d H:i:s"));
+                    $llegada = new DateTime($inicio->format("Y-m-d H:i:s"));
                     $d = rand(1, 4);
                     $llegada->add(new DateInterval('P' . $d . 'D'));
                     $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
@@ -115,8 +115,8 @@ class DatabaseSeeder extends Seeder
                     $aviso = \App\Models\AvisoHistorico::create([
                         'habilitado' => 1,
                         'idUsuario' => $usuario['name'],
-                        'salidaFecha' => $fecha->format('Y-m-d'),
-                        'salidaHora' => $fecha->format('H:i:s'),
+                        'salidaFecha' => $inicio->format('Y-m-d'),
+                        'salidaHora' => $inicio->format('H:i:s'),
                         'salidaLugar' => $salida,
                         'llegadaFecha' => $llegada->format('Y-m-d'),
                         'llegadaHora' => $llegada->format('H:i:s'),
@@ -124,7 +124,7 @@ class DatabaseSeeder extends Seeder
                         'idCliente' => $cliente['nombre'],
                         'clienteDetalle' => $clienteDetalle,
                         'respuesta' => $respuestas[rand(0, count($respuestas) - 1)],
-                        'respuestaFecha' => $fecha->format('Y-m-d'),
+                        'respuestaFecha' => $inicio->format('Y-m-d'),
                         'respuestaDetalle' => $fak->sentence($nbWords = 6, $variableNbWords = true),
                         'coches' => implode('##', $coches_guardar),
                         'confirmada' => 1
@@ -135,8 +135,8 @@ class DatabaseSeeder extends Seeder
                             'habilitado' => 1,
                             'idAviso' => $aviso->id,
                             'idUsuario' => $usuario['name'],
-                            'salidaFecha' => $fecha->format('Y-m-d'),
-                            'salidaHora' => $fecha->format('H:i:s'),
+                            'salidaFecha' => $inicio->format('Y-m-d'),
+                            'salidaHora' => $inicio->format('H:i:s'),
                             'salidaLugar' => $salida,
                             'llegadaFecha' => $llegada->format('Y-m-d'),
                             'llegadaHora' => $llegada->format('H:i:s'),
@@ -153,10 +153,10 @@ class DatabaseSeeder extends Seeder
                 }
                 for ($i = 0; $i <  $max; $i++) {
                     $init = rand(0, 23);
-                    $fecha->setTime($init, 0, 0);
+                    $inicio->setTime($init, 0, 0);
                     $usuario = $usuarios[rand(0, 7)];
                     $cliente = $clientes[rand(0, count($clientes) - 1)];
-                    $llegada = new DateTime($fecha->format("Y-m-d H:i:s"));
+                    $llegada = new DateTime($inicio->format("Y-m-d H:i:s"));
                     $llegada->add(new DateInterval('P' . rand(1, 4) . 'D'));
                     $clienteDetalle = $fak->sentence($nbWords = 6, $variableNbWords = true);
                     $salida = $fak->city();
@@ -171,8 +171,8 @@ class DatabaseSeeder extends Seeder
                     $aviso = \App\Models\AvisoHistorico::create([
                         'habilitado' => 1,
                         'idUsuario' => $usuario['name'],
-                        'salidaFecha' => $fecha->format('Y-m-d'),
-                        'salidaHora' => $fecha->format('H:i:s'),
+                        'salidaFecha' => $inicio->format('Y-m-d'),
+                        'salidaHora' => $inicio->format('H:i:s'),
                         'salidaLugar' => $salida,
                         'llegadaFecha' => $llegada->format('Y-m-d'),
                         'llegadaHora' => $llegada->format('H:i:s'),
@@ -180,7 +180,7 @@ class DatabaseSeeder extends Seeder
                         'idCliente' => $cliente['nombre'],
                         'clienteDetalle' => $clienteDetalle,
                         'respuesta' => $respuestas[rand(0, count($respuestas) - 1)],
-                        'respuestaFecha' => $fecha->format('Y-m-d'),
+                        'respuestaFecha' => $inicio->format('Y-m-d'),
                         'respuestaDetalle' => $fak->sentence($nbWords = 6, $variableNbWords = true),
                         'coches' => implode('##', $coches_guardar),
                         'confirmada' => 1
@@ -189,8 +189,8 @@ class DatabaseSeeder extends Seeder
                     $libro = \App\Models\LibroHistorico::create([
                         'habilitado' => 1,
                         'idUsuario' => $usuario['name'],
-                        'salidaFecha' => $fecha->format('Y-m-d'),
-                        'salidaHora' => $fecha->format('H:i:s'),
+                        'salidaFecha' => $inicio->format('Y-m-d'),
+                        'salidaHora' => $inicio->format('H:i:s'),
                         'salidaLugar' => $salida,
                         'llegadaFecha' => $llegada->format('Y-m-d'),
                         'llegadaHora' => $llegada->format('H:i:s'),
