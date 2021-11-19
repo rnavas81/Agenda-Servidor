@@ -228,5 +228,25 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+    'coches_avisos' => [
+      '9 PLAZAS',
+      '19 PLAZAS',
+      '25 PLAZAS',
+      '31 PLAZAS',
+      '35 PLAZAS',
+      '40 PLAZAS',
+      '50 PLAZAS',
+      '54 PLAZAS',
+      '55 PLAZAS',
+      'Turismo',
+      'OTROS',
+    ],
+    'respuestas_avisos' => [
+        "",
+        "Telefono",
+        "Webmail",
+        "Hotmail",
+        "Otros",
+    ],
 
 ];

@@ -39,7 +39,6 @@ class Libro extends Model
         'idMigracion'
     ];
     protected $hidden = [
-        'idCliente',
         'idUsuario',
         'updated_at',
         'habilitado',
