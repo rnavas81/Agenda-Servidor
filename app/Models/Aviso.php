@@ -26,7 +26,6 @@ class Aviso extends Model
         'respuestaDetalle'
     ];
     protected $hidden = [
-        'idCliente',
         'idUsuario',
         'updated_at',
         'habilitado',

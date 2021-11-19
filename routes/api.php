@@ -71,6 +71,8 @@ Route::group(
             Route::get('/aviso/entradas/{fecha}', [Aviso::class, 'getByFecha']);
             // Busca las entradas de una semana
             Route::get('/aviso/semana/{fecha}', [Aviso::class, 'getSemana']);
+            // Recupera una entrada de historico
+            Route::get('/aviso/historico/{id}', [Aviso::class, 'getHistorico']);
             // Nueva entrada de aviso
             Route::post('/aviso', [Aviso::class, 'insert']);
             // Actualiza una entrada de aviso
@@ -121,6 +123,8 @@ Route::group(
             Route::get('/libro', [Libro::class, 'getAll']);
             // Recupera los datos de una entrada de la libro
             Route::get('/libro/{id}', [Libro::class, 'get']);
+            // Recupera una entrada de historico
+            Route::get('/libro/historico/{id}', [Libro::class, 'getHistorico']);
             // Busca las entradas de la libro en una fecha
             Route::get('/libro/entradas/{fecha}', [Libro::class, 'getByFecha']);
             // Busca las entradas de una semana

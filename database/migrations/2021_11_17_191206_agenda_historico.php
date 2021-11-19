@@ -20,7 +20,7 @@ class AgendaHistorico extends Migration
             $table->timestamps();
             $table->string('habilitado',3)->nullable();
             $table->string('confirmada',3)->nullable();
-            $table->string('idUsuario',10)->nullable();
+            $table->string('idUsuario',1000)->nullable();
             $table->string('salidaFecha',25)->nullable();
             $table->string('salidaHora',25)->nullable();
             $table->string('salidaLugar', 500)->nullable();
@@ -31,9 +31,10 @@ class AgendaHistorico extends Migration
             $table->string('idCliente',500)->nullable();
             $table->string('clienteDetalle', 500)->nullable();
             $table->string('observaciones', 1000)->nullable();
-            $table->string('respuesta',3)->nullable();
+            $table->string('respuesta',100)->nullable();
             $table->string('respuestaFecha',25)->nullable();
             $table->string('respuestaDetalle', 1000)->nullable();
+            $table->string('coches', 1000)->nullable();
             $table->string('idMigracion',50)->nullable();
         });
     }
