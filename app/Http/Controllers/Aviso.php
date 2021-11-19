@@ -6,6 +6,7 @@ use App\Http\Controllers\Libro as ControllersLibro;
 use App\Models\Aviso as ModelsAviso;
 use App\Models\AvisoCoches;
 use App\Models\AvisoConductores;
+use App\Models\AvisoHistorico;
 use App\Models\Cliente;
 use App\Models\Coche;
 use App\Models\Conductor;
@@ -143,6 +144,15 @@ class Aviso extends Controller
             DB::rollBack();
             return response()->noContent(406);
         }
+    }
+    public function getHistorico(Request $request, $id)
+    {
+        $data = AvisoHistorico::where("id",$id)->first();
+        if($data) {
+            $data->coches=explode("##",$data->coches);
+            return response()->json($data,200);
+        }
+        else return response()->noContent(406);
     }
     /**
      * Recupera información de las entradas de la base de datos

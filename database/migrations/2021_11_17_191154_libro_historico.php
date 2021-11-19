@@ -19,14 +19,14 @@ class LibroHistorico extends Migration
             $table->id();
             $table->timestamps();
             $table->string('habilitado', 3)->nullable();
-            $table->string('idUsuario', 10)->nullable();
+            $table->string('idUsuario', 1000)->nullable();
             $table->string('idAviso', 10)->nullable();
             $table->string('salidaFecha', 25)->nullable();
             $table->string('salidaHora', 25)->nullable();
-            $table->string('salidaLugar', 25)->nullable();
+            $table->string('salidaLugar', 1000)->nullable();
             $table->string('llegadaFecha', 25)->nullable();
             $table->string('llegadaHora', 25)->nullable();
-            $table->string('llegadaLugar', 25)->nullable();
+            $table->string('llegadaLugar', 1000)->nullable();
             $table->string('itinerario', 1000)->nullable();
             $table->string('contacto', 100)->nullable();
             $table->string('contactoTlf', 12)->nullable();
@@ -40,7 +40,7 @@ class LibroHistorico extends Migration
             $table->string('cobradoForma', 255)->nullable();
             $table->string('cobradoDetalle', 500)->nullable();
             $table->string('gastos', 1000)->nullable();
-            $table->string('facturarA', 10)->nullable();
+            $table->string('facturarA', 500)->nullable();
             $table->string('facturaNombre', 500)->nullable();
             $table->string('facturaNumero', 25)->nullable();
             $table->string('idMigracion',50)->nullable();

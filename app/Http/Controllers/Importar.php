@@ -170,6 +170,11 @@ class Importar extends Controller
                     break;
                 case 'Itinerario':
                     $insert['itinerario'] = strval($value);
+                    if (str_contains($value, "-")) {
+                        $vals = explode('-', $value);
+                        $insert['salidaLugar'] = $vals[0];
+                        $insert['llegadaLugar'] = end($vals);
+                    } else  $insert['llegadaLugar'] = $value;
                     break;
                 case 'Kms':
                     $insert['kms'] = strval($value);
@@ -271,6 +276,11 @@ class Importar extends Controller
 
                 case 'Itinerario':
                     $insert['itinerario'] = $value;
+                    if (str_contains($value, "-")) {
+                        $vals = explode('-', $value);
+                        $insert['salidaLugar'] = $vals[0];
+                        $insert['llegadaLugar'] = end($vals);
+                    } else $insert['llegadaLugar'] = $value;
                     break;
                 case 'Kms':
                     $insert['kms'] = $value;

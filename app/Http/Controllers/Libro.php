@@ -8,6 +8,7 @@ use App\Models\Conductor;
 use App\Models\Libro as ModelsLibro;
 use App\Models\LibroCoches;
 use App\Models\LibroConductores;
+use App\Models\LibroHistorico;
 use DateInterval;
 use DateTime;
 use Exception;
@@ -105,6 +106,17 @@ class Libro extends Controller
         } else {
             return response()->noContent(406);
         }
+    }
+
+    public function getHistorico(Request $request, $id)
+    {
+        $data = LibroHistorico::where("id",$id)->first();
+        if($data){
+            $data->coches=explode("##",$data->coches);
+            $data->conductores=explode("##",$data->conductores);
+            return response()->json($data,200);
+        } 
+        else return response()->noContent(406);
     }
 
     /**
