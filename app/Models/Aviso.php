@@ -23,7 +23,8 @@ class Aviso extends Model
         'idCliente',
         'idUsuario',
         'respuesta',
-        'respuestaDetalle'
+        'respuestaDetalle',
+        'fecha_aviso'
     ];
     protected $hidden = [
         'idUsuario',

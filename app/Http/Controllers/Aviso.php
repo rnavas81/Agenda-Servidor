@@ -253,6 +253,7 @@ class Aviso extends Controller
         if (isset($request['respuesta'])) $data['respuesta'] = $request['respuesta'];
         if (isset($request['respuestaFecha'])) $data['respuestaFecha'] = $request['respuestaFecha'];
         if (isset($request['respuestaDetalle'])) $data['respuestaDetalle'] = $request['respuestaDetalle'];
+        if (isset($request['fecha_aviso'])) $data['fecha_aviso'] = $request['fecha_aviso'];
         return $data;
     }
     /**
