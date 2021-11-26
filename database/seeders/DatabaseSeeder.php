@@ -17,32 +17,43 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        $usuarios = [
+            [
+                'name' => 'admin',
+                'username' => 'admin',
+                'password' => bcrypt("admin"),
+                'email' => 'no-reply@rivilla.com',
+                'email_verified_at' => now(),
+            ],
+            [
+                'name' => 'Julián',
+                'username' => 'jRivilla',
+                'password' => bcrypt("jRivilla"),
+                'email' => 'autobusesrivilla@hotmail.com',
+                'email_verified_at' => now(),
+            ], [
+                'name' => 'Felipe',
+                'username' => 'fNavas',
+                'password' => bcrypt("fNavas"),
+                'email' => 'fnavasar@hotmail.com',
+                'email_verified_at' => now(),
+            ], [
+                'name' => 'Juan',
+                'lastName' => 'Giraldo',
+                'username' => 'jGiraldo',
+                'password' => bcrypt("jGiraldo"),
+                'email' => 'juangb4@hotmail.com',
+                'email_verified_at' => now(),
+            ],
+        ];
+        foreach ($usuarios as $usuario) {
+            \App\Models\User::create($usuario);
+        }
         if (env('APP_ENV') === 'local') {
 
             $fak = \Faker\Factory::create('es_ES');
             $fak2 = \Faker\Factory::create('ms_MY');
-            $usuarios = [
-                [
-                    'name' => 'admin',
-                    'username' => 'admin',
-                    'password' => bcrypt("admin"),
-                    'email' => $fak->email,
-                    'email_verified_at' => now(),
-                ],
-                [
-                    'name' => 'Julián',
-                    'username' => 'jRivilla',
-                    'password' => bcrypt("jRivilla"),
-                    'email' => 'autobusesrivilla@hotmail.com',
-                    'email_verified_at' => now(),
-                ], [
-                    'name' => 'Felipe',
-                    'username' => 'fNavas',
-                    'password' => bcrypt("fNavas"),
-                    'email' => 'fnavasar@hotmail.com',
-                    'email_verified_at' => now(),
-                ],
-            ];
+            $usuarios = [];
             for ($i = 0; $i < 5; $i++) {
                 $usuarios[] = [
                     'name' => $fak->firstName,
