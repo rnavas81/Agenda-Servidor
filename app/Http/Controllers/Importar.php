@@ -28,6 +28,8 @@ class Importar extends Controller
     public function set(Request $request)
     {
         set_time_limit(0);
+        ini_set('memory_limit', '2048M');
+        ini_set('max_input_time',0);
         if ($request->hasFile('thumbnail')) {
             $data = $this->getRequestData($request);
             try {
@@ -71,29 +73,6 @@ class Importar extends Controller
                         }
                     }
                 }
-
-                // /**  Convert Spreadsheet Object to an Array for ease of use  **/
-                // $schdeules = $spreadsheet->getActiveSheet()->toArray();
-                // // Recupera las columnas de la primera fila
-                // $cols = array_values($schdeules[0]);
-                // DB::beginTransaction();
-                // for ($i = 1; $i < count($schdeules); $i++) {
-                //     $row = $schdeules[$i];
-                //     $row = $schdeules[$i];
-                //     if ($data["tipo"] == 1) { //Datos para agenda
-                //         if ($data["donde"] == 1) { //Datos para historico
-                //             $this->guardarAgendaHistorico($row, $cols);
-                //         } elseif ($data["donde"] == 2) { //Datos en actual
-                //             $this->guardarAgendaActual($row, $cols);
-                //         }
-                //     } else if ($data["tipo"] == 2) {
-                //         if ($data["donde"] == 1) { //Datos para historico
-                //             $this->guardarLibroHistorico($row, $cols);
-                //         } elseif ($data["donde"] == 2) { //Datos en actual
-                //             $this->guardarLibroActual($row, $cols);
-                //         }
-                //     }
-                // }
                 DB::commit();
                 return response("Importación correcta", 201);
             } catch (\Throwable $th) {
