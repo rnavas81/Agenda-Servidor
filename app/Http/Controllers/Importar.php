@@ -27,6 +27,7 @@ class Importar extends Controller
      */
     public function set(Request $request)
     {
+        set_time_limit(0);
         if ($request->hasFile('thumbnail')) {
             $data = $this->getRequestData($request);
             try {
