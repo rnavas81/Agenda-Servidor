@@ -40,5 +40,7 @@ RUN a2enmod headers  &&\
 # Directorio de trabajo
 WORKDIR /var/www/html/
 
+CMD composer install; chmod 777 -R .;
+
 # Abre el puerto para el acceso
 EXPOSE 80
